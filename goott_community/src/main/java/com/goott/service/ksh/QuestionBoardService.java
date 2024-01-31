@@ -1,9 +1,11 @@
 package com.goott.service.ksh;
 
-import java.util.Map;
+import java.util.List;
+
+import com.goott.vodto.ksh.QuestionBoardDto;
 
 public interface QuestionBoardService {
 
-	Map<String, Object> getAllBoard();
+	List<QuestionBoardDto> getAllBoard() throws Exception;
 
 }

@@ -14,7 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class QuestionBoardDto {
-	private int postNo;
+	private int no;
 	private String writer;
 	private Timestamp postDate;
 	private String title;

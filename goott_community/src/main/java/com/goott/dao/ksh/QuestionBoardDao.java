@@ -6,6 +6,6 @@ import com.goott.vodto.ksh.QuestionBoardDto;
 
 public interface QuestionBoardDao {
 
-	List<QuestionBoardDto> getAllBoard();
+	List<QuestionBoardDto> getAllBoard() throws Exception;
 
 }

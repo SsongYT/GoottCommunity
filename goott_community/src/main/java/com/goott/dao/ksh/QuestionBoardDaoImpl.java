@@ -18,7 +18,7 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	private String ns = "com.goott.mappers.questionBoardMapper";
 
 	@Override
-	public List<QuestionBoardDto> getAllBoard() {
+	public List<QuestionBoardDto> getAllBoard() throws Exception {
 		
 		return session.selectList(ns+".getAllBoard");
 	}

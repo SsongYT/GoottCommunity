@@ -18,12 +18,10 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	private QuestionBoardDao qbDao;
 	
 	@Override
-	public Map<String, Object> getAllBoard() {
-		Map<String, Object> result = new HashMap<String, Object>();
+	public List<QuestionBoardDto> getAllBoard() throws Exception {
 		List<QuestionBoardDto> list = null;
 		list = qbDao.getAllBoard();
-		result.put("list", list);
-		return result;
+		return list;
 	}
 
 }

@@ -1,20 +1,22 @@
 package com.goott.controller.ksh;
 
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.goott.service.ksh.QuestionBoardService;
+import com.goott.vodto.ksh.QuestionBoardDto;
 
 @RestController
 @RequestMapping("/questionBoard/*")
@@ -22,11 +24,18 @@ public class QuestionBoardController {
 
 	@Inject private QuestionBoardService qbService;
 	
+	@RequestMapping("boardList")
+	public ModelAndView boardList() {
+		ModelAndView mav = new ModelAndView("questionBoard/boardList");
+		
+		return mav;
+	}
+	
 	@RequestMapping("questionBoard/all")
 	public ResponseEntity<Map<String, Object>> questionBoardList(HttpServletRequest request, Model model) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> list = null;
+		List<QuestionBoardDto> list = null;
 		try {		
 				list = qbService.getAllBoard();
 				if(list != null) {
@@ -44,4 +53,20 @@ public class QuestionBoardController {
 		
 		return result;
 	}
+	
+	@RequestMapping("questionBoard/{no}")
+	public ResponseEntity<Map<String, Object>> questionBoardDetail(HttpServletRequest request, @PathVariable("no") String no) {
+		ResponseEntity<Map<String, Object>> result = null;
+		Map<String, Object> map = new HashMap<String, Object>();
+		return result;
+	
+	}
+	
+	@RequestMapping("questionBoard/writeBoard")
+	public ModelAndView writeQuestionBoard(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("questionBoard/writeBoard");
+		return mav;
+	
+	}
+	
 }
