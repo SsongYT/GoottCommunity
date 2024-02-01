@@ -21,6 +21,16 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
+	<!-- 
+		최대 파일 업로드 용량 설정
+		CommonsMultipartResolver : 전송 단위보다 큰 용량의 파일 데이터가 부분으로 전송 되었을 때,
+		다시 재조립해주는 객체
+	 -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="5242880"></beans:property>
+	</beans:bean>
+	
 	<context:component-scan base-package="com.goott.controller" />
 	
 	

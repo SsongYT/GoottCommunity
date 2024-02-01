@@ -24,9 +24,47 @@
 <script>
 $(function(){
 $('#summernote').summernote({
-		 height: 300,      
+		 height: 300,
+		 lang: 'ko-KR',
+		 callbacks : { 
+         	onImageUpload : function(files, editor, welEditable) {
+         // 파일 업로드(다중업로드를 위해 반복문 사용)
+         for (var i = files.length - 1; i >= 0; i--) {
+         uploadSummernoteImageFile(files[i],
+         this);
+         		}
+         	}
+         }
 });
 });
+
+//id가 겹치므로 삭제 버튼에는 index를 붙여서 구분
+function showUploadedFile(data) {
+	let name = data.replaceAll("\\", "/");
+	console.log(name);
+	return name;
+} 
+function uploadSummernoteImageFile(file, el) {
+	data = new FormData();
+	data.append("file", file);
+	$.ajax({
+		data : data,
+		dataType : "json",
+		type : "POST",
+		url : "/app/questionBoard/uploadSummernoteImageFile",
+		contentType : false,
+		processData : false,
+		success : function(data) {
+			console.log("!",data);
+			
+			$('#summernote').summernote('insertImage', data.url);
+			
+		},
+		error : function(data) {
+			console.log("업로드 실패", data);
+		}
+	});
+}
 </script>
 <style>
 .box {
@@ -52,7 +90,7 @@ $('#summernote').summernote({
 		<option>학원</option>
 		<option>기타</option>
 		</select>
-		<input size=125 maxlength=300>
+		<input size=130 maxlength=300>
 		<h4>content</h4>
 	<textarea id="summernote" name="content"></textarea>
 	</div>
