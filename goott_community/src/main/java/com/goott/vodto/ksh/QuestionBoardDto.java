@@ -1,6 +1,7 @@
 package com.goott.vodto.ksh;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class QuestionBoardDto {
 	private String title;
 	private String content;
 	private int ref;
+	private String category;
+	private List<String> fileList;
 
 
 }
