@@ -8,4 +8,8 @@ public interface QuestionBoardService {
 
 	List<QuestionBoardDto> getAllBoard() throws Exception;
 
+	boolean insertBoard(QuestionBoardDto qBoard) throws Exception;
+	
+	
+
 }

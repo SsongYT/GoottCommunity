@@ -4,7 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.goott.mappers.questionBoardMapper">
-	<select id="getAllBoard" resultType="com.goott.vodto.ksh.QuestionBoardDto">
-		select * from board2
+	<select id="getAllBoard"
+		resultType="com.goott.vodto.ksh.QuestionBoardDto">
+		SELECT * FROM question_board ORDER BY NO DESC;
 	</select>
+
+	<insert id="insertBoard"
+		parameterType="com.goott.vodto.ksh.QuestionBoardDto"
+		useGeneratedKeys="true" keyProperty="no">
+		INSERT INTO question_board (writer, title, content, category)
+		VALUES(#{writer}, #{title}, #{content}, #{category})
+	</insert>
+
+	<insert id="insertUploadFiles">
+		INSERT INTO upload_file
+		(extension, original_filename,
+		new_filename, file_size, board_no)
+		VALUES
+		<foreach item="item" index="index" collection="list"
+			separator=",">
+			(#{item.extension}, #{item.originalFileName},
+			#{item.newFileName},#{item.fileSize},#{no})
+		</foreach>
+	</insert>
 </mapper>

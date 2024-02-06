@@ -16,13 +16,14 @@ import lombok.ToString;
 @ToString
 public class QuestionBoardDto {
 	private int no;
-	private String writer;
-	private Timestamp postDate;
+	private String writer = "dooly";
+	private Timestamp post_date;
 	private String title;
 	private String content;
 	private int ref;
 	private String category;
-	private List<String> fileList;
+	private List<UploadFiles> fileList;
+	private List<Integer> uf_no;
 
 
 }

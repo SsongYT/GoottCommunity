@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,7 +52,6 @@ public class QuestionBoardController {
 			if (list != null) {
 				map.put("list", list);
 				map.put("status", "success");
-				System.out.println(map.toString());
 				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 			}
 
@@ -101,7 +101,7 @@ public class QuestionBoardController {
 
 		if (file != null) {
 			String imageUrl = request.getContextPath() + relativePath + "/" + file.getNewFileName();
-			map.put("fileName", file.getNewFileName());
+			map.put("file", file);
 			map.put("url", imageUrl);
 			map.put("status", "success");
 			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
@@ -115,11 +115,20 @@ public class QuestionBoardController {
 	}
 
 	@RequestMapping(value = "insertBoard", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> insertQuestionBoard(@ModelAttribute QuestionBoardDto qBoard,
+	public ResponseEntity<Map<String, Object>> insertQuestionBoard(@RequestBody QuestionBoardDto qBoard,
 			HttpServletRequest request) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println(qBoard.toString());
+		try {
+			// insert 성공 시
+			if(qbService.insertBoard(qBoard)) {
+				System.out.println("게시글 업로드 완료");
+			};
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		map.put("status", "success");
 		result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 		return result;

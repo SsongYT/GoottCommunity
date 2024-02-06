@@ -51,7 +51,7 @@
 
 	function addFileList(data) {
 		let i = fileList.length;
-		fileList[i] = data.fileName;
+		fileList[i] = data.file;
 		console.log(fileList);
 	}
 
@@ -77,39 +77,50 @@
 	}
 	
 	function insertBoard(content) {		
-		// 변수의 값이 HTML 형식인 경우 jQuery 객체를 사용
-		let sendContent = $("<input>", {
-			  type: "hidden",
-			  value: content,
-			  name: "content",
-			  id: "boardContent",
-			  readonly: true
-			});
-		$('#insertBoard').append(sendContent);
-		console.log($('#boardContent').val());
 		
-		if(fileList.length > 0) {
-			fileList.forEach((file,i) => {
-				let sendFile = $("<input type='hidden' value=" + file + " name='fileList' readonly>");
-				$('#insertBoard').append(sendFile);
-			});
+		let sendBoard = {
+				"title" :  $('#boardTitle').val(),
+				"content" : content,
+				"category" : $('#boardCategory').val(),
+				fileList,
 		}
 		
-		$('#insertBoard').submit();	
+		$.ajax({
+			url : "/app/questionBoard/insertBoard",
+			type : "POST",
+			contentType : "application/json",
+			data : JSON.stringify(sendBoard),
+			async : false, // 여기랑 purpose쪽 다시 보자
+			success : function(data) {
+				console.log("업로드성공", data);
+				if (data.status == "success") {
+					console.log(data);
+					location.href="boardList";
+				}
+			},
+			error : function(data) {
+				console.log("업로드 실패", data);
+			}
+		});
 	}
 
 	// questionBoard 유효성 검사
 	function isValidBoard() {
-		
+		let boardTitle = $('#boardTitle').val();
+		let boardContent = $('#summernote').summernote('code');
 		if ($('#boardCategory').val() != '카테고리') {
 			isValidCategory = true;
 		}
 
-		if ($('#boardTitle').val() != '') {
+		if (boardTitle == '') {
+			alert("제목을 입력해주세요.");
+		} else if(boardTitle.length < 2) {
+			alert("제목은 2자 이상이어야 합니다.");
+		} else {
 			isValidTitle = true;
 		}
 
-		if ($('#summernote').summernote('code') != '<p><br></p>') {
+		if (boardContent != '<p><br></p>') {
 			isValidContent = true;
 		}
 
@@ -117,10 +128,14 @@
 		if (isValidCategory && isValidTitle && isValidContent) {
 
 			// 정규표현식을 사용하여 img 태그의 src 속성 삭제.
-			let outputString = $('#summernote').summernote('code').replace(
+			let outputString = boardContent.replace(
 					/<img\s+([^>]*\s)?src="[^"]*"\s?([^>]*)>/g, '<img $1$2>');
 			console.log(typeof(outputString));
 			insertBoard(outputString);
+		} else if(isValidTitle && !isValidContent) {
+			$('#summernote').summernote('focus', true);
+		} else if(!isValidTitle) {
+			$('#boardTitle').focus();
 		}
 
 	}
@@ -140,8 +155,6 @@
 <body>
 
 	<div class="container">
-		<form action="/app/questionBoard/insertBoard" id="insertBoard"
-			method="POST">
 			<h2>질문 게시글 작성</h2>
 			<div class="box">
 				<h4>title</h4>
@@ -151,7 +164,7 @@
 					<option>취업</option>
 					<option>학원</option>
 					<option>기타</option>
-				</select> <input size=130 maxlength=300 name="title" id="boardTitle">
+				</select> <input size=120 maxlength=300 name="title" id="boardTitle">
 				<h4>content</h4>
 				<textarea id="summernote"></textarea>
 			</div>
