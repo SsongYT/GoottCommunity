@@ -171,8 +171,7 @@
 
 			<button type="button" class="btn btn-primary"
 				onclick="isValidBoard();">작성</button>
-			<button type="button" class="btn btn-secondary">취소</button>
-		</form>
+			<button type="button" class="btn btn-secondary" onclick="location.href='boardList'">취소</button>
 	</div>
 
 </body>

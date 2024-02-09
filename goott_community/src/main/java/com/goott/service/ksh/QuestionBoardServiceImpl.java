@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goott.dao.ksh.QuestionBoardDao;
+import com.goott.vodto.ksh.Comments;
 import com.goott.vodto.ksh.QuestionBoardDto;
+import com.goott.vodto.ksh.UploadFiles;
 
 
 @Service
@@ -42,6 +44,33 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 				result = true;
 			}
 		};
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getDetailBoard(int no) throws Exception {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 클릭한 게시글 조회
+		
+		QuestionBoardDto detailBoard = qbDao.getDetailBoard(no);
+		if(detailBoard != null) {
+			result.put("detailBoard", detailBoard);
+			if(detailBoard.getUfNoCount() > 0) {		
+				// 파일 조회
+				List<UploadFiles> detailFiles = qbDao.getBoardUploadFile(no);
+				if(detailFiles != null) {
+					result.put("detailFiles", detailFiles);
+				}
+			}
+			if(detailBoard.getCommentCount() > 0) {
+				// 댓글 조회
+				List<Comments> comments = qbDao.getAllComments(no);
+				if(comments != null) {
+					result.put("detailComments", comments);
+				}
+			}
+		}
+		
 		return result;
 	}
 

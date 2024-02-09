@@ -27,4 +27,22 @@
 			#{item.newFileName},#{item.fileSize},#{no})
 		</foreach>
 	</insert>
+	
+	<select id="getDetailBoard"
+		resultType="com.goott.vodto.ksh.QuestionBoardDto">
+				SELECT q.*, count(DISTINCT u.uf_no) AS ufNoCount, COUNT(DISTINCT c.comment_no) AS commentCount FROM question_board q inner join upload_file u
+		on q.no = u.board_no 
+        LEFT JOIN comments c ON q.no = c.ref where q.no = #{no} and c.board_category_no = 1;
+		
+	</select>
+	
+	<select id="getBoardUploadFile"
+		resultType="com.goott.vodto.ksh.UploadFiles">
+		SELECT * FROM upload_file WHERE board_no = #{no}
+	</select>
+	
+	<select id="getAllComments"
+		resultType="com.goott.vodto.ksh.Comments">
+		SELECT * FROM comments WHERE ref = #{no} and board_category_no = 1;
+	</select>
 </mapper>

@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
+import com.goott.vodto.ksh.Comments;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -42,5 +43,25 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 				count += session.insert(ns + ".insertUploadFiles", map);
 				System.out.println(count + "개 insert 완료");
 		return count;
+	}
+
+	@Override
+	public QuestionBoardDto getDetailBoard(int no) throws Exception {
+		
+		return session.selectOne(ns + ".getDetailBoard", no);
+	}
+
+	
+	@Override
+	public List<UploadFiles> getBoardUploadFile(int no) throws Exception {
+		
+		return session.selectList(ns + ".getBoardUploadFile", no);
+	}
+
+	@Override
+	public List<Comments> getAllComments(int no) throws Exception {
+		// TODO Auto-generated method stub
+		return session.selectList(ns + ".getAllComments", no);
+
 	}
 }

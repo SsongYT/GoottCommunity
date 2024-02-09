@@ -64,11 +64,34 @@ public class QuestionBoardController {
 		return result;
 	}
 
-	@RequestMapping("questionBoard/{no}")
+	@RequestMapping("questionBoard/{no}") 
+	public ModelAndView detailBoard(@PathVariable("no") int no) {
+		ModelAndView mav = new ModelAndView("questionBoard/detailBoard");
+		mav.addObject("no", no);
+		return mav;
+	}
+	
+	@RequestMapping(value="questionBoard/{no}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> questionBoardDetail(HttpServletRequest request,
-			@PathVariable("no") String no) {
+			@PathVariable("no") int no) {
 		ResponseEntity<Map<String, Object>> result = null;
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = null;
+		try {
+			map = qbService.getDetailBoard(no);
+			if (map != null) {
+				map.put("status", "success");
+				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+			} else {
+				map.put("status", "error");
+				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			map.put("status", "error");
+			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+		}
+		
 		return result;
 
 	}
@@ -100,7 +123,7 @@ public class QuestionBoardController {
 		}
 
 		if (file != null) {
-			String imageUrl = request.getContextPath() + relativePath + "/" + file.getNewFileName();
+			String imageUrl = request.getContextPath() + relativePath + "/" + file.getNew_fileName();
 			map.put("file", file);
 			map.put("url", imageUrl);
 			map.put("status", "success");

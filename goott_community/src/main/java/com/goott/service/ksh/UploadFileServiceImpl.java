@@ -57,13 +57,13 @@ public class UploadFileServiceImpl implements UploadFileService {
 		UploadFiles uf = new UploadFiles();
 		
 		if (size > 0) {
-			uf.setOriginalFileName(originalFileName);
-			uf.setFileSize(size);
-			uf.setNewFileName(getNewFileName(originalFileName, realPath, completePath));
+			uf.setOriginal_fileName(originalFileName);
+			uf.setFile_size(size);
+			uf.setNew_fileName(getNewFileName(originalFileName, realPath, completePath)); 
 			uf.setExtension(originalFileName.substring(originalFileName.lastIndexOf(".") + 1));
 			
 			// 실제 파일을 저장시키는 문장
-			FileCopyUtils.copy(data, new File(realPath + uf.getNewFileName()));
+			FileCopyUtils.copy(data, new File(realPath + uf.getNew_fileName()));
 	
 		}
 		return uf;
@@ -110,9 +110,7 @@ public class UploadFileServiceImpl implements UploadFileService {
 		int result = -1;
 		String contentType = newFileName.substring(newFileName.lastIndexOf(".") + 1);
 		File file = new File(realPath + newFileName);
-		if (file.exists()) {
-	
-			
+		if (file.exists()) {			
 			file.delete();
 			result = 1;
 		} else {

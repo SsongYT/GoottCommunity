@@ -14,18 +14,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class QuestionBoardDto {
-	private int no;
+public class Comments {
+	private int comment_no;
 	private String writer;
-	private Timestamp post_date;
-	private String title;
 	private String content;
+	private int board_category_no;
 	private int ref;
-	private String category;
-	private List<UploadFiles> fileList;
-	private List<Integer> uf_no;
-	private int ufNoCount;
-	private int commentCount;
-
-
 }
