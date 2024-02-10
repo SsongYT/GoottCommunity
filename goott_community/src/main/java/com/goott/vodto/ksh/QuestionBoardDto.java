@@ -25,7 +25,7 @@ public class QuestionBoardDto {
 	private List<UploadFiles> fileList;
 	private List<Integer> uf_no;
 	private int ufNoCount;
-	private int commentCount;
+	private int answerCount;
 
 
 }

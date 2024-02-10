@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
-import com.goott.vodto.ksh.Comments;
+import com.goott.vodto.ksh.Answers;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -59,9 +59,9 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public List<Comments> getAllComments(int no) throws Exception {
+	public List<Answers> getAllAnswers(int no) throws Exception {
 		// TODO Auto-generated method stub
-		return session.selectList(ns + ".getAllComments", no);
+		return session.selectList(ns + ".getAllAnswers", no);
 
 	}
 }

@@ -18,22 +18,21 @@
 
 	<insert id="insertUploadFiles">
 		INSERT INTO upload_file
-		(extension, original_filename,
-		new_filename, file_size, board_no)
+		(extension, original_fileName,
+		new_fileName, file_size, board_no)
 		VALUES
 		<foreach item="item" index="index" collection="list"
 			separator=",">
-			(#{item.extension}, #{item.originalFileName},
-			#{item.newFileName},#{item.fileSize},#{no})
+			(#{item.extension}, #{item.original_fileName},
+			#{item.new_fileName},#{item.file_size},#{no})
 		</foreach>
 	</insert>
 	
 	<select id="getDetailBoard"
 		resultType="com.goott.vodto.ksh.QuestionBoardDto">
-				SELECT q.*, count(DISTINCT u.uf_no) AS ufNoCount, COUNT(DISTINCT c.comment_no) AS commentCount FROM question_board q inner join upload_file u
-		on q.no = u.board_no 
-        LEFT JOIN comments c ON q.no = c.ref where q.no = #{no} and c.board_category_no = 1;
-		
+		SELECT q.*, count(DISTINCT u.uf_no) AS ufNoCount, COUNT(DISTINCT a.answer_no) AS answerCount FROM question_board q LEFT JOIN upload_file u
+		on q.no = u.board_no and u.board_category_no = 1
+        LEFT JOIN answers a ON q.no = a.ref and a.board_category_no = 1 where q.no = #{no};  		
 	</select>
 	
 	<select id="getBoardUploadFile"
@@ -41,8 +40,8 @@
 		SELECT * FROM upload_file WHERE board_no = #{no}
 	</select>
 	
-	<select id="getAllComments"
-		resultType="com.goott.vodto.ksh.Comments">
-		SELECT * FROM comments WHERE ref = #{no} and board_category_no = 1;
+	<select id="getAllAnswers"
+		resultType="com.goott.vodto.ksh.Answers">
+		SELECT * FROM answers WHERE ref = #{no} and board_category_no = 1;
 	</select>
 </mapper>

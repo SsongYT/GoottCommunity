@@ -14,10 +14,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class Comments {
-	private int comment_no;
+public class Answers {
+	private int answers_no;
 	private String writer;
 	private String content;
 	private int board_category_no;
 	private int ref;
+	private Timestamp post_date;
 }

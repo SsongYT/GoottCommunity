@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.goott.dao.ksh.QuestionBoardDao;
-import com.goott.vodto.ksh.Comments;
+import com.goott.vodto.ksh.Answers;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -34,7 +34,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 		if(qbDao.insertBoard(qBoard) > 0) {
 			
 			// 업로드 파일이 있는지
-			if(qBoard.getFileList() != null) {
+			if(!qBoard.getFileList().isEmpty()) {
 				// 파일 insert 성공 시
 				if(qbDao.insertUploadFiles(qBoard) < qBoard.getFileList().size()) {
 					System.out.println("qBoard.getFileList().size()"+ qBoard.getFileList().size());
@@ -62,11 +62,11 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 					result.put("detailFiles", detailFiles);
 				}
 			}
-			if(detailBoard.getCommentCount() > 0) {
-				// 댓글 조회
-				List<Comments> comments = qbDao.getAllComments(no);
-				if(comments != null) {
-					result.put("detailComments", comments);
+			if(detailBoard.getAnswerCount() > 0) {
+				// 답변 조회
+				List<Answers> answers = qbDao.getAllAnswers(no);
+				if(answers != null) {
+					result.put("detailAnswers", answers);
 				}
 			}
 		}
