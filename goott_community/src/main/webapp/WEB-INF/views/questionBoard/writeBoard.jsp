@@ -126,6 +126,8 @@
 	function isValidBoard() {
 		let boardTitle = $('#boardTitle').val();
 		let boardContent = $('#summernote').summernote('code');
+		let isEmptyContent = boardContent.replaceAll("&nbsp;","").replaceAll(" ","").replaceAll("<br>", "");
+		
 		if ($('#boardCategory').val() != '카테고리') {
 			isValidCategory = true;
 		}
@@ -138,7 +140,7 @@
 			isValidTitle = true;
 		}
 
-		if (boardContent != '<p><br></p>') {
+		if (isEmptyContent != '<p></p>') {
 			isValidContent = true;
 		}
 

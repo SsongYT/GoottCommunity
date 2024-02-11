@@ -19,12 +19,12 @@
 	<insert id="insertUploadFiles">
 		INSERT INTO upload_file
 		(extension, original_fileName,
-		new_fileName, file_size, board_no)
+		new_fileName, file_size, board_no, board_category_no)
 		VALUES
 		<foreach item="item" index="index" collection="list"
 			separator=",">
 			(#{item.extension}, #{item.original_fileName},
-			#{item.new_fileName},#{item.file_size},#{no})
+			#{item.new_fileName},#{item.file_size},#{no},1)
 		</foreach>
 	</insert>
 	

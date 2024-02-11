@@ -31,36 +31,58 @@
 	rel="stylesheet">
 <title>Insert title here</title>
 <script>
+	let isValidTitle = false;
+	let isValidContent = false;
+	let fileList = [];
+	let isLogin = true;	// false면 비로그인. 우선 true로 작업.
 	$(function() {
 		showDetailBoard();
-		$('#summernote').summernote({
-			height : 300,
-			lang : 'ko-KR',
-			tabsize: 2,
-		    // close prettify Html
-		    prettifyHtml:false,
-		    toolbar:[
-		        // Add highlight plugin
-		        ['style', ['style']],
-  				['font', ['bold', 'underline', 'clear']],
-				['fontname', ['fontname']],
-				['color', ['color']],
-				['para', ['ul', 'ol', 'paragraph']],
-				['table', ['table']],
-				['insert', ['link', 'picture', 'video']],
-				['view', ['codeview', 'help']],
-				['highlight', ['highlight']],	// 코드 블럭 플러그인 적용
-		    ],
-			callbacks : {
-				onImageUpload : function(files, editor, welEditable) {
-					// 파일 업로드(다중업로드를 위해 반복문 사용)
-					for (let i = files.length - 1; i >= 0; i--) {
-						uploadSummernoteImageFile(files[i]);
+		// loginCheck();	// 로그인했는지 체크하는 함수.		
+		let controlSummernote = 'disable';
+		if(!isLogin) {
+			$('#summernote').summernote({
+				height : 150,
+				callbacks: {
+                    onInit: function() {                    	
+                        // notice 클래스를 가진 div 추가
+                        let noticeDiv = $(`<div class="notice"><span id="goToLogin" onclick="location.href='/app/login'">로그인</span> 후 작성 가능합니다.</div>`);
+                        $('#summernote').summernote('pasteHTML', noticeDiv[0].outerHTML);
+                    }
+                }
+			});
+			$('#summernote').summernote('disable');
+		} else {
+		// 썸머노트 커스텀 설정
+			$('#summernote').summernote({
+				height : 300,
+				lang : 'ko-KR',
+				tabsize: 2,
+			    // close prettify Html
+			    prettifyHtml:false,
+			    toolbar:[
+			        ['style', ['style']],
+	  				['font', ['bold', 'underline', 'clear']],
+					['fontname', ['fontname']],
+					['color', ['color']],
+					['para', ['ul', 'ol', 'paragraph']],
+					['table', ['table']],
+					['insert', ['link', 'picture', 'video']],
+					['view', ['codeview', 'help']],
+					['highlight', ['highlight']],	// 코드 블럭 플러그인 적용
+			    ],
+				callbacks : {
+					onImageUpload : function(files, editor, welEditable) {
+						// 파일 업로드(다중업로드를 위해 반복문 사용)
+						for (let i = files.length - 1; i >= 0; i--) {
+							uploadSummernoteImageFile(files[i]);
+						}
 					}
 				}
-			}
-		});
+			});
+		}
 	});
+	
+	// no번의 글 data 가져오기
 	function getDetailBoard() {
 		let result = null;
 		$.ajax({
@@ -77,6 +99,8 @@
 		});
 		return result;
 	}
+	
+	// 상세 글 띄우기
 	function showDetailBoard() {
 		console.log("상세 글 띄우기");
 		let data = getDetailBoard();
@@ -96,11 +120,20 @@
 				imgElements[i].src = imgUrl+data.detailFiles[i].new_fileName;
 			}
 		}
+		
+		// 답변이 있다면
 		if(data.detailAnswers != null) {
 			let items = data.detailAnswers;
 			let outputAnswers = "";
 			$.each(items, function(i, item) {
-			outputAnswers += `<tr><td class="col-md-3">\${item.writer}</td><td class="col-md-5">\${item.content}</td><td class="col-md-4">\${item.ref}</td></tr>`;
+			outputAnswers += `<div class="row">
+			// 미리보기 test. upAndDownCount 데이터 받아올 예정.
+			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up upAndDown"></i>
+			<span class="upAndDownCount">0</span>
+			<i class="fa-solid fa-circle-chevron-down upAndDown"></i>
+			</div>
+			
+			<div class="container col-xs-11"><p>\${item.writer} \${item.post_date}</p><div>\${item.content}</div></div></div>`;
 			
 			});
 			$('.outputAnswers').html(outputAnswers);
@@ -108,20 +141,68 @@
 			if(items.length > 1) {
 				outputAnswersCount += "s";
 			} 
-			$('#AnswerCount').html(outputAnswersCount);
+			$('#answerCount').html(outputAnswersCount);
 			$(".outputAnswers").after("<hr>");
 		}
 	}
 	
+	// 답변 유효성 검사
+	function isValidAnswer() {
+		if(isLogin) {
+			let answerContent = $('#summernote').summernote('code');
+			// 내용에 공백만 있는지 확인
+			let isEmptyContent = answerContent.replaceAll("&nbsp;","").replaceAll(" ","").replaceAll("<br>", "");
+			if(isEmptyContent != '<p></p>') {
+				isValidContent = true;
+			}
+		} else {
+			alert("로그인 후 작성 가능합니다.");
+		}
+		
+	}
+	
 </script>
+<style>
+	.btn {
+		float: right;
+		margin-top: 10px;
+	}
+	
+	#goToLogin {
+		text-decoration: underline;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	#answerCount {
+		padding-bottom : 10px;
+	}
+	
+	.col-xs-1{
+		display: flex;
+		flex-direction: column; 
+		align-items: center;
+	}
+	
+	.upAndDown {
+		font-size : 2em;
+	}
+	
+	.upAndDownCount {
+		font-size: 25px;
+	}
+	
+</style>
 </head>
 <body>
 	<div  class="container mt-3">
 	<div class="outputBody"></div>
-	<h3 id="AnswerCount"></h3>
+	<!-- 질문 작성자 프로필 구현 예정 -->
+	<h3 id="answerCount"></h3>
 	<div class="outputAnswers"></div>
 	<h3>Your Answer</h3>
 	<textarea id="summernote"></textarea>
+	<button type="button" class="btn btn-primary"
+			onclick="isValidAnswer();">작성</button>
 	</div>
 </body>
 </html>

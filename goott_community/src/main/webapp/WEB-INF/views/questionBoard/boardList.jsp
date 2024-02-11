@@ -16,12 +16,12 @@
 </head>
 <script>
 	$(function() {
-		showBoard();
+		showBoard();		
 	});
-	function getAllBoard() {
+	function getAllBoard(pageNo=0) {
 		let result = null;
 		$.ajax({
-			url : "/app/questionBoard/all",
+			url : "/app/questionBoard/boardList/"+pageNo,
 			type : "GET",
 			dataType : "json",
 			async : false,
@@ -66,6 +66,7 @@
 			</tbody>
 		</table>
 		<button type="button" class="btn btn-primary" style="float:right;" onclick="location.href='/app/questionBoard/writeBoard'">글쓰기</button>
+		<ul class="pagination"></ul>
 	</div>
 </body>
 </html>

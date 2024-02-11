@@ -42,8 +42,9 @@ public class QuestionBoardController {
 		return mav;
 	}
 
-	@RequestMapping("questionBoard/all")
-	public ResponseEntity<Map<String, Object>> questionBoardList(HttpServletRequest request, Model model) {
+	// 질문 게시판 모든 게시글 가져오기.
+	@RequestMapping("questionBoard/boardList/{pageNo}")
+	public ResponseEntity<Map<String, Object>> questionBoardList(HttpServletRequest request, Model model, @PathVariable("no") int no) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<QuestionBoardDto> list = null;
@@ -64,6 +65,7 @@ public class QuestionBoardController {
 		return result;
 	}
 
+	// 질문 게시판 상세 글 페이지 이동
 	@RequestMapping("questionBoard/{no}") 
 	public ModelAndView detailBoard(@PathVariable("no") int no) {
 		ModelAndView mav = new ModelAndView("questionBoard/detailBoard");
@@ -71,6 +73,7 @@ public class QuestionBoardController {
 		return mav;
 	}
 	
+	// 질문 게시판 상세 글 데이터 가져오기
 	@RequestMapping(value="questionBoard/{no}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> questionBoardDetail(HttpServletRequest request,
 			@PathVariable("no") int no) {
@@ -96,6 +99,7 @@ public class QuestionBoardController {
 
 	}
 
+	// 질문 게시글 작성 페이지로 이동
 	@RequestMapping("questionBoard/writeBoard")
 	public ModelAndView writeQuestionBoard(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("questionBoard/writeBoard");
@@ -103,6 +107,7 @@ public class QuestionBoardController {
 
 	}
 
+	// Summernote 이미지 업로드
 	@RequestMapping(value = "uploadSummernoteImageFile", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public ResponseEntity<Map<String, Object>> uploadSummernoteImageFile(@RequestParam("file") MultipartFile uploadFile,
 			HttpServletRequest request) {
@@ -137,6 +142,7 @@ public class QuestionBoardController {
 
 	}
 
+	// 질문 게시글 작성
 	@RequestMapping(value = "insertBoard", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> insertQuestionBoard(@RequestBody QuestionBoardDto qBoard,
 			HttpServletRequest request) {
