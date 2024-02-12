@@ -21,6 +21,12 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	private QuestionBoardDao qbDao;
 	
 	@Override
+	public int getTotalPostCnt() throws Exception {
+		// 총 게시글 개수
+		return qbDao.getTotalPostCnt();
+	}
+	
+	@Override
 	public List<QuestionBoardDto> getAllBoard() throws Exception {
 		List<QuestionBoardDto> list = null;
 		list = qbDao.getAllBoard();
@@ -73,5 +79,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 		
 		return result;
 	}
+
+	
 
 }

@@ -20,10 +20,16 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	SqlSession session;
 	
 	private String ns = "com.goott.mappers.questionBoardMapper";
+	
+	@Override
+	public int getTotalPostCnt() throws Exception {
+		// 총 게시글 개수
+		return session.selectOne(ns+".getTotalPostCnt");
+	}
 
 	@Override
 	public List<QuestionBoardDto> getAllBoard() throws Exception {
-		
+
 		return session.selectList(ns+".getAllBoard");
 	}
 
@@ -64,4 +70,6 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		return session.selectList(ns + ".getAllAnswers", no);
 
 	}
+
+	
 }

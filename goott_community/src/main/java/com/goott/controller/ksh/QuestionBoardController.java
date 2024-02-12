@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.goott.service.ksh.QuestionBoardService;
 import com.goott.service.ksh.UploadFileService;
+import com.goott.vodto.ksh.PagingInfo;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -38,21 +39,26 @@ public class QuestionBoardController {
 	@RequestMapping("boardList")
 	public ModelAndView boardList() {
 		ModelAndView mav = new ModelAndView("questionBoard/boardList");
-
+		
 		return mav;
 	}
 
 	// 질문 게시판 모든 게시글 가져오기.
-	@RequestMapping("questionBoard/boardList/{pageNo}")
-	public ResponseEntity<Map<String, Object>> questionBoardList(HttpServletRequest request, Model model, @PathVariable("no") int no) {
+	@RequestMapping(value = "boardList/{pageNo}", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> questionBoardList(HttpServletRequest request, @PathVariable int pageNo) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<QuestionBoardDto> list = null;
+		System.out.println(pageNo);
+	
 		try {
+			PagingInfo pi = new PagingInfo(qbService.getTotalPostCnt(), pageNo);			
 			list = qbService.getAllBoard();
 			if (list != null) {
+				map.put("pagingInfo", pi);
 				map.put("list", list);
 				map.put("status", "success");
+				System.out.println(map.toString());
 				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 			}
 

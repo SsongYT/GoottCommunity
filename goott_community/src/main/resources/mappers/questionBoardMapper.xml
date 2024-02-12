@@ -4,9 +4,15 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.goott.mappers.questionBoardMapper">
+	
+	<select id="getTotalPostCnt"
+		resultType="java.lang.Integer">		
+		SELECT count(*) FROM question_board;
+	</select>
+
 	<select id="getAllBoard"
-		resultType="com.goott.vodto.ksh.QuestionBoardDto">
-		SELECT * FROM question_board ORDER BY NO DESC;
+		resultType="com.goott.vodto.ksh.QuestionBoardDto">		
+		SELECT * FROM question_board ORDER BY NO DESC
 	</select>
 
 	<insert id="insertBoard"

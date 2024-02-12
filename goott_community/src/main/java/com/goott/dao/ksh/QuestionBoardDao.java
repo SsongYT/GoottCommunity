@@ -7,6 +7,8 @@ import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
 public interface QuestionBoardDao {
+	
+	int getTotalPostCnt() throws Exception;
 
 	List<QuestionBoardDto> getAllBoard() throws Exception;
 
