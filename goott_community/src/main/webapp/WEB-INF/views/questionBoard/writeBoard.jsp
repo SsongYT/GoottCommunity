@@ -22,7 +22,7 @@
 <script src="/app/resources/summernote/summernote-lite.js"></script>
 <script src="/app/resources/summernote/lang/summernote-ko-KR.js"></script>
 <!-- highlight code block  -->
-<script src="/app/resources/summernote-ext-highlight.js"></script>
+<script src="/app/resources/js/summernote-ext-highlight.js"></script>
 <!-- font awesome -->
 <script src="https://kit.fontawesome.com/0dda0703cf.js"
 	crossorigin="anonymous"></script>

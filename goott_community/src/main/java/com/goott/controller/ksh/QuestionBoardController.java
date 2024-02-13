@@ -22,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.goott.service.ksh.QuestionBoardService;
 import com.goott.service.ksh.UploadFileService;
-import com.goott.vodto.ksh.PagingInfo;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -52,10 +51,11 @@ public class QuestionBoardController {
 		System.out.println(pageNo);
 	
 		try {
-			PagingInfo pi = new PagingInfo(qbService.getTotalPostCnt(), pageNo);			
+			int totalPostCnt = qbService.getTotalPostCnt();		
 			list = qbService.getAllBoard();
 			if (list != null) {
-				map.put("pagingInfo", pi);
+				map.put("totalPostCnt", totalPostCnt);
+				map.put("pageNo", pageNo);
 				map.put("list", list);
 				map.put("status", "success");
 				System.out.println(map.toString());
