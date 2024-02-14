@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.goott.mapper.MemberMapper">
+
+	<insert id="insertMember">
+		INSERT INTO MEMBER (USER_ID, USER_PASSWORD, USER_NAME, USER_PHONE_NO, USER_EMAIL) 
+		VALUES (#{userId}, SHA2(#{userPassword}, 256), #{userName}, #{userPhoneNo}, #{userEmail})
+	</insert>
+	
+	<delete id="deleteMember">
+		DELETE FROM MEMBER WHERE MEMBER_PK = (SELECT MEMBER_PK FROM MEMBER WHERE MEMBER_ID = #{memberId})
+	</delete>
+	
+	<select id="selectMemberById" resultType="int">
+		SELECT COUNT(*) 
+		FROM MEMBER 
+		WHERE USER_ID = #{checkId}
+	</select>
+	
+	<select id="selectLoginById" resultType="int">
+		SELECT COUNT(*) 
+		FROM MEMBER 
+		WHERE USER_ID = #{userId}
+	</select>
+	
+	<select id="selectLoginMember" resultType="int">
+		SELECT COUNT(*) 
+		FROM MEMBER 
+		WHERE USER_ID = #{userId} 
+			AND USER_PASSWORD = SHA2(#{userPassword}, 256)
+	</select>
+	
+	<select id="selectMemberPkByUserId" resultType="int">
+		SELECT MEMBER_PK 
+		FROM MEMBER 
+		WHERE USER_ID = #{userId} 
+	</select>
+	
+</mapper>

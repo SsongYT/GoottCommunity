@@ -1,5 +1,8 @@
 package com.goott.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.goott.dto.LoginDTO;
 import com.goott.dto.MemberDTO;
+import com.goott.etc.ResponseData;
+import com.goott.etc.ResponseEnum;
 import com.goott.service.MemberService;
 
 @RestController
@@ -40,10 +45,10 @@ public class MemberController {
 			}
 			
 		} catch (SQLException | IOException e) {
-			responseData = new ResponseData();
-			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
-			responseData.setCode(ExceptionEnum.SQLException.getCode());
-			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
+//			responseData = new ResponseData();
+//			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
+//			responseData.setCode(ExceptionEnum.SQLException.getCode());
+//			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 		}
 		
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
@@ -64,10 +69,10 @@ public class MemberController {
 			}
 			
 		} catch (SQLException | IOException e) {
-			responseData = new ResponseData();
-			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
-			responseData.setCode(ExceptionEnum.SQLException.getCode());
-			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
+//			responseData = new ResponseData();
+//			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
+//			responseData.setCode(ExceptionEnum.SQLException.getCode());
+//			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 		}
 
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
@@ -90,16 +95,16 @@ public class MemberController {
 				}
 				
 			} catch (SQLException | IOException e) {
-				responseData = new ResponseData();
-				httpStatus = ExceptionEnum.SQLException.getHttpStatus();
-				responseData.setCode(ExceptionEnum.SQLException.getCode());
-				responseData.setMessages(ExceptionEnum.SQLException.getMessages());
+//				responseData = new ResponseData();
+//				httpStatus = ExceptionEnum.SQLException.getHttpStatus();
+//				responseData.setCode(ExceptionEnum.SQLException.getCode());
+//				responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 			}
 		} else {
 			responseData = new ResponseData();
 			httpStatus = HttpStatus.BAD_REQUEST;
-			responseData.setCode(ResponseDataEnum.session_fasle.getCode());
-			responseData.setMessages(ResponseDataEnum.session_fasle.getMessages());
+			responseData.setCode(ResponseEnum.session_fasle.getCode());
+			responseData.setMessages(ResponseEnum.session_fasle.getMessages());
 		}
 		
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
@@ -121,10 +126,10 @@ public class MemberController {
 			}
 			
 		} catch (SQLException | IOException e) {
-			responseData = new ResponseData();
-			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
-			responseData.setCode(ExceptionEnum.SQLException.getCode());
-			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
+//			responseData = new ResponseData();
+//			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
+//			responseData.setCode(ExceptionEnum.SQLException.getCode());
+//			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 		}
 
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);

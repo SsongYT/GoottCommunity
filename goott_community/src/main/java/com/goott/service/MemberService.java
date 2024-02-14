@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.goott.dto.LoginDTO;
 import com.goott.dto.MemberDTO;
+import com.goott.etc.ResponseData;
+import com.goott.etc.ResponseEnum;
 import com.goott.mapper.MemberMapper;
 
 
@@ -22,12 +24,12 @@ public class MemberService {
 	public ResponseData hasMemberId(String checkId) throws SQLException, IOException {
 		ResponseData responseData = new ResponseData();
 		if(memberMapper.selectMemberById(checkId) == 0) {
-			responseData.setCode(ResponseDataEnum.basic_true.getCode());
-			responseData.setMessages(ResponseDataEnum.basic_true.getMessages());
+			responseData.setCode(ResponseEnum.basic_true.getCode());
+			responseData.setMessages(ResponseEnum.basic_true.getMessages());
 
 		} else {
-			responseData.setCode(ResponseDataEnum.check_false_id.getCode());
-			responseData.setMessages(ResponseDataEnum.check_false_id.getMessages());
+			responseData.setCode(ResponseEnum.check_false_id.getCode());
+			responseData.setMessages(ResponseEnum.check_false_id.getMessages());
 
 		}
 		
@@ -38,12 +40,12 @@ public class MemberService {
 		ResponseData responseData = new ResponseData();
 		
 		if(memberMapper.insertMember(memberDTO) == 1) {
-			responseData.setCode(ResponseDataEnum.basic_true.getCode());
-			responseData.setMessages(ResponseDataEnum.basic_true.getMessages());
+			responseData.setCode(ResponseEnum.basic_true.getCode());
+			responseData.setMessages(ResponseEnum.basic_true.getMessages());
 
 		} else {
-			responseData.setCode(ResponseDataEnum.basic_false.getCode());
-			responseData.setMessages(ResponseDataEnum.basic_false.getMessages());
+			responseData.setCode(ResponseEnum.basic_false.getCode());
+			responseData.setMessages(ResponseEnum.basic_false.getMessages());
 
 		}
 		
@@ -54,12 +56,12 @@ public class MemberService {
 		ResponseData responseData = new ResponseData();
 		
 		if(memberMapper.deleteMember(deleteID) == 1) {
-			responseData.setCode(ResponseDataEnum.basic_true.getCode());
-			responseData.setMessages(ResponseDataEnum.basic_true.getMessages());
+			responseData.setCode(ResponseEnum.basic_true.getCode());
+			responseData.setMessages(ResponseEnum.basic_true.getMessages());
 
 		} else {
-			responseData.setCode(ResponseDataEnum.basic_false.getCode());
-			responseData.setMessages(ResponseDataEnum.basic_false.getMessages());
+			responseData.setCode(ResponseEnum.basic_false.getCode());
+			responseData.setMessages(ResponseEnum.basic_false.getMessages());
 
 		}
 		
@@ -72,17 +74,17 @@ public class MemberService {
 
 		if(memberMapper.selectLoginById(loginDTO) == 1) {
 			if(memberMapper.selectLoginMember(loginDTO) == 1) {
-				responseData.setCode(ResponseDataEnum.basic_true.getCode());
-				responseData.setMessages(ResponseDataEnum.basic_true.getMessages());
+				responseData.setCode(ResponseEnum.basic_true.getCode());
+				responseData.setMessages(ResponseEnum.basic_true.getMessages());
 
 			} else {
-				responseData.setCode(ResponseDataEnum.login_fasle_password.getCode());
-				responseData.setMessages(ResponseDataEnum.login_fasle_password.getMessages());
+				responseData.setCode(ResponseEnum.login_fasle_password.getCode());
+				responseData.setMessages(ResponseEnum.login_fasle_password.getMessages());
 
 			}
 		} else {
-			responseData.setCode(ResponseDataEnum.login_fasle_id.getCode());
-			responseData.setMessages(ResponseDataEnum.login_fasle_id.getMessages());
+			responseData.setCode(ResponseEnum.login_fasle_id.getCode());
+			responseData.setMessages(ResponseEnum.login_fasle_id.getMessages());
 
 		}
 		

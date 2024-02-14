@@ -41,6 +41,9 @@
 	
 	<!-- 어노테이션으로 트랜잭션 설정 -->
 	<tx:annotation-driven proxy-target-class="true" mode="proxy" />
+	<!-- 
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	 -->
 	
 	<!-- SqlSessionFactory (PreparedStatememt 역할) 설정 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -59,5 +62,9 @@
 	<!-- 
 	<context:component-scan base-package="com.goott.dao" />
 	 -->
+	 
+	 <context:component-scan base-package="com.goott.service" />
+	 <context:component-scan base-package="com.goott.etc" />
+	 <context:component-scan base-package="com.goott.mapper" />
 		
 </beans>
