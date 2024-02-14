@@ -1,5 +1,5 @@
 function createPagingInfo(totalPostCntData, pageNoData) {
-	    let viewPostCntPerPage = 10; // 한 페이지당 보여줄 글의 갯수
+	    let viewPostCntPerPage = 2; // 한 페이지당 보여줄 글의 갯수
 	    let pageCntPerBlock = 3; // 한 블록당 보여줄 페이지의 갯수
 		let totalPostCnt = totalPostCntData;
 	    let pageNo = pageNoData;
@@ -37,6 +37,6 @@ function createPagingInfo(totalPostCntData, pageNoData) {
 
 	// 사용 예시
 	function makePi(totalPostCntData, pageNoData) {
-	pageInfo = createPagingInfo(totalPostCntData, pageNoData); 
+	let pageInfo = createPagingInfo(totalPostCntData, pageNoData);
 	showBoard(pageInfo);
 	}

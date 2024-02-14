@@ -161,7 +161,6 @@ public class QuestionBoardController {
 				System.out.println("게시글 업로드 완료");
 			};
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		map.put("status", "success");
