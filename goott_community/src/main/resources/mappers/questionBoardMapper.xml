@@ -4,50 +4,85 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.goott.mappers.questionBoardMapper">
-	
-	<select id="getTotalPostCnt"
-		resultType="java.lang.Integer">		
-		SELECT count(*) FROM question_board;
+
+	<select id="getTotalPostCnt" resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		question_board;
 	</select>
 
 	<select id="getAllBoard"
-		resultType="com.goott.vodto.ksh.QuestionBoardDto">		
+		resultType="com.goott.vodto.ksh.QuestionBoardDto">
 		SELECT * FROM question_board ORDER BY NO DESC
 	</select>
 
 	<insert id="insertBoard"
 		parameterType="com.goott.vodto.ksh.QuestionBoardDto"
 		useGeneratedKeys="true" keyProperty="no">
-		INSERT INTO question_board (writer, title, content, category)
-		VALUES(#{writer}, #{title}, #{content}, #{category})
+		INSERT INTO question_board
+		(writer, title, content, category)
+		VALUES(#{writer}, #{title},
+		#{content}, #{category})
+	</insert>
+	
+	<insert id="insertAnswer">
+	INSERT INTO answers
+		(writer, content, ref, ref_category_no)
+		VALUES(#{writer}, #{content}, #{ref}, 1)
 	</insert>
 
 	<insert id="insertUploadFiles">
 		INSERT INTO upload_file
 		(extension, original_fileName,
-		new_fileName, file_size, board_no, board_category_no)
+		new_fileName,
+		file_size, board_no, ref_category_no)
 		VALUES
 		<foreach item="item" index="index" collection="list"
 			separator=",">
 			(#{item.extension}, #{item.original_fileName},
-			#{item.new_fileName},#{item.file_size},#{no},1)
+			#{item.new_fileName},#{item.file_size},#{no},#{ref_category_no})
 		</foreach>
 	</insert>
-	
+
 	<select id="getDetailBoard"
 		resultType="com.goott.vodto.ksh.QuestionBoardDto">
-		SELECT q.*, count(DISTINCT u.uf_no) AS ufNoCount, COUNT(DISTINCT a.answer_no) AS answerCount FROM question_board q LEFT JOIN upload_file u
-		on q.no = u.board_no and u.board_category_no = 1
-        LEFT JOIN answers a ON q.no = a.ref and a.board_category_no = 1 where q.no = #{no};  		
+		SELECT q.*, COUNT(DISTINCT u.uf_no) AS ufNoCount,
+		COUNT(DISTINCT
+		a.answer_no) AS answerCount
+		FROM question_board q
+		LEFT
+		JOIN upload_file u ON q.no = u.board_no AND u.ref_category_no = 1
+		LEFT
+		JOIN answers a ON q.no = a.ref AND a.ref_category_no = 1
+		WHERE q.no =
+		#{no};
 	</select>
-	
+
 	<select id="getBoardUploadFile"
 		resultType="com.goott.vodto.ksh.UploadFiles">
-		SELECT * FROM upload_file WHERE board_no = #{no}
+		SELECT * FROM upload_file WHERE board_no = #{no} and
+		ref_category_no = #{ref_category_no}
 	</select>
-	
+
 	<select id="getAllAnswers"
-		resultType="com.goott.vodto.ksh.Answers">
-		SELECT * FROM answers WHERE ref = #{no} and board_category_no = 1;
+		resultType="com.goott.vodto.ksh.AnswerDto">
+		SELECT a.*,
+		CASE WHEN u.file_count > 0 THEN file_count ELSE
+		0 END AS file_count
+		FROM answers a
+		LEFT JOIN (
+		SELECT board_no, COUNT(*)
+		AS file_count
+		FROM upload_file
+		GROUP BY board_no
+		) u ON a.answer_no =
+		u.board_no
+		WHERE a.ref = #{no} and a.ref_category_no = 1;
 	</select>
+
+	<select id="getAnswerUploadFile" resultType="com.goott.vodto.ksh.UploadFiles">
+		SELECT * FROM upload_file
+		WHERE board_no = #{answer_no} AND ref_category_no = #{board_category_no}
+	</select>
+
+	
 </mapper>

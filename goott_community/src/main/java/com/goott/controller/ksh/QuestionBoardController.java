@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.goott.service.ksh.QuestionBoardService;
 import com.goott.service.ksh.UploadFileService;
+import com.goott.vodto.ksh.AnswerDto;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -38,7 +37,7 @@ public class QuestionBoardController {
 	@RequestMapping("boardList")
 	public ModelAndView boardList() {
 		ModelAndView mav = new ModelAndView("questionBoard/boardList");
-		
+
 		return mav;
 	}
 
@@ -49,9 +48,9 @@ public class QuestionBoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<QuestionBoardDto> list = null;
 		System.out.println(pageNo);
-	
+
 		try {
-			int totalPostCnt = qbService.getTotalPostCnt();		
+			int totalPostCnt = qbService.getTotalPostCnt();
 			list = qbService.getAllBoard();
 			if (list != null) {
 				map.put("totalPostCnt", totalPostCnt);
@@ -72,15 +71,15 @@ public class QuestionBoardController {
 	}
 
 	// 질문 게시판 상세 글 페이지 이동
-	@RequestMapping("questionBoard/{no}") 
+	@RequestMapping("questionBoard/{no}")
 	public ModelAndView detailBoard(@PathVariable("no") int no) {
 		ModelAndView mav = new ModelAndView("questionBoard/detailBoard");
 		mav.addObject("no", no);
 		return mav;
 	}
-	
+
 	// 질문 게시판 상세 글 데이터 가져오기
-	@RequestMapping(value="questionBoard/{no}", method = RequestMethod.POST)
+	@RequestMapping(value = "questionBoard/{no}", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> questionBoardDetail(HttpServletRequest request,
 			@PathVariable("no") int no) {
 		ResponseEntity<Map<String, Object>> result = null;
@@ -100,7 +99,7 @@ public class QuestionBoardController {
 			map.put("status", "error");
 			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
 		}
-		
+
 		return result;
 
 	}
@@ -157,11 +156,13 @@ public class QuestionBoardController {
 		System.out.println(qBoard.toString());
 		try {
 			// insert 성공 시
-			if(qbService.insertBoard(qBoard)) {
+			if (qbService.insertBoard(qBoard)) {
 				System.out.println("게시글 업로드 완료");
-			};
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			map.put("status", "fail");
+			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
 		}
 		map.put("status", "success");
 		result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
@@ -169,4 +170,24 @@ public class QuestionBoardController {
 
 	}
 
+	// 질문 게시글에 대한 답변 등록
+	@RequestMapping(value = "{no}/insertAnswer", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> insertAnswer(@RequestBody AnswerDto answer, HttpServletRequest request,
+			@PathVariable int no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ResponseEntity<Map<String, Object>> result = null;
+		answer.setRef(no);
+		try {
+			if(qbService.insertAnswer(answer)) {
+				map.put("status", "success");
+				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			map.put("status", "fail");
+			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

@@ -22,16 +22,19 @@
 <script src="/app/resources/summernote/summernote-lite.js"></script>
 <script src="/app/resources/summernote/lang/summernote-ko-KR.js"></script>
 <!-- highlight code block  -->
-<script src="/app/resources/summernote-ext-highlight.js"></script>
+<script src="/app/resources/js/summernote-ext-highlight.js"></script>
 <!-- font awesome -->
 <script src="https://kit.fontawesome.com/0dda0703cf.js"
 	crossorigin="anonymous"></script>
+<!-- moment.js 라이브러리 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<!-- summernote upload 분리-->
+<script src="/app/resources/js/summernote-upload.js"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css"
 	rel="stylesheet">
 <title>Insert title here</title>
 <script>
-	let isValidTitle = false;
 	let isValidContent = false;
 	let fileList = [];
 	let isLogin = true;	// false면 비로그인. 우선 true로 작업.
@@ -126,14 +129,15 @@
 			let items = data.detailAnswers;
 			let outputAnswers = "";
 			$.each(items, function(i, item) {
-			outputAnswers += `<div class="row">
 			// 미리보기 test. upAndDownCount 데이터 받아올 예정.
+			let formattedDate = moment(item.post_date).format('YYYY-MM-DD HH:mm');
+			outputAnswers += `<div class="row">
 			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up upAndDown"></i>
 			<span class="upAndDownCount">0</span>
 			<i class="fa-solid fa-circle-chevron-down upAndDown"></i>
 			</div>
 			
-			<div class="container col-xs-11"><p>\${item.writer} \${item.post_date}</p><div>\${item.content}</div></div></div>`;
+			<div class="container col-xs-11"><p>\${item.writer} \${formattedDate}</p><div>\${item.content}</div></div></div>`;
 			
 			});
 			$('.outputAnswers').html(outputAnswers);
@@ -146,21 +150,55 @@
 		}
 	}
 	
+	
+	
 	// 답변 유효성 검사
 	function isValidAnswer() {
 		if(isLogin) {
 			let answerContent = $('#summernote').summernote('code');
 			// 내용에 공백만 있는지 확인
 			let isEmptyContent = answerContent.replaceAll("&nbsp;","").replaceAll(" ","").replaceAll("<br>", "");
-			if(isEmptyContent != '<p></p>') {
+			if(isEmptyContent != '<p></p>') {				
 				isValidContent = true;
+			}
+			if(isValidContent) {
+				// 정규표현식을 사용하여 img 태그의 src 속성 삭제.
+				let outputString = answerContent.replace(
+						/<img\s+([^>]*\s)?src="[^"]*"\s?([^>]*)>/g, '<img $1$2>');
+				insertAnswer(outputString);							
 			}
 		} else {
 			alert("로그인 후 작성 가능합니다.");
 		}
 		
 	}
-	
+
+	// 답변 등록
+	function insertAnswer(content) {
+		let sendAnswer = {
+				"writer" : "bbiyagi",
+				"content" : content,
+				fileList,
+		}
+		
+		$.ajax({
+			url : "/app/questionBoard/"+"${no}"+"/insertAnswer",
+			type : "POST",
+			contentType : "application/json",
+			data : JSON.stringify(sendAnswer),
+			async : false, 
+			success : function(data) {
+				console.log("업로드성공", data);
+				if (data.status == "success") {
+					console.log(data);
+					showDetailBoard();
+				}
+			},
+			error : function(data) {
+				console.log("업로드 실패", data);
+			}
+		});
+	}
 </script>
 <style>
 	.btn {

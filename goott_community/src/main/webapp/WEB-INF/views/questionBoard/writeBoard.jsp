@@ -26,6 +26,8 @@
 <!-- font awesome -->
 <script src="https://kit.fontawesome.com/0dda0703cf.js"
 	crossorigin="anonymous"></script>
+<!-- summernote upload 분리-->
+<script src="/app/resources/js/summernote-upload.js"></script>
 <link
 	href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css"
 	rel="stylesheet">
@@ -66,33 +68,7 @@
 			}
 		});
 	});
-
-	function addFileList(data) {
-		let i = fileList.length;
-		fileList[i] = data.file;
-		console.log(fileList);
-	}
-
-	// summernote에서 이미지 업로드 시 실행할 함수
-	function uploadSummernoteImageFile(file) {
-		data = new FormData();
-		data.append("file", file);
-		$.ajax({
-			data : data,
-			dataType : "json",
-			type : "POST",
-			url : "/app/questionBoard/uploadSummernoteImageFile",
-			contentType : false,
-			processData : false,
-			success : function(data) {
-				$('#summernote').summernote('insertImage', data.url);
-				addFileList(data);
-			},
-			error : function(data) {
-				console.log("업로드 실패", data);
-			}
-		});
-	}
+	
 	
 	function insertBoard(content) {		
 		

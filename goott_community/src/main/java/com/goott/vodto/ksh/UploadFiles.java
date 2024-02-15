@@ -19,7 +19,7 @@ public class UploadFiles {
 	private String new_fileName;
 	private long file_size;
 	private int board_no;
-	private int board_category_no;
+	private int ref_category_no;
 	
 	public UploadFiles(String original_fileName, long file_size) {
 		this.original_fileName = original_fileName;

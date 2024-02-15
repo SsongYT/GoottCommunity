@@ -1,6 +1,6 @@
 function createPagingInfo(totalPostCntData, pageNoData) {
-	    let viewPostCntPerPage = 2; // 한 페이지당 보여줄 글의 갯수
-	    let pageCntPerBlock = 3; // 한 블록당 보여줄 페이지의 갯수
+	    let viewPostCntPerPage = 2; // 한 페이지당 보여줄 글의 개수
+	    let pageCntPerBlock = 3; // 한 블록당 보여줄 페이지의 개수
 		let totalPostCnt = totalPostCntData;
 	    let pageNo = pageNoData;
 	    // 총 페이지 수 계산
@@ -15,7 +15,7 @@ function createPagingInfo(totalPostCntData, pageNoData) {
 	    // 현재 페이징 블록의 시작 페이지 번호 계산
 	    let startNumOfCurrentPagingBlock = (pageBlockOfCurrentPage - 1) * pageCntPerBlock + 1;
 
-	    // 전체 페이징 블록의 갯수 계산
+	    // 전체 페이징 블록의 개수 계산
 	    let totalPagingBlockCnt = Math.ceil(totalPageCnt / pageCntPerBlock);
 
 	    // 현재 페이징 블록의 끝 페이지 번호 계산
