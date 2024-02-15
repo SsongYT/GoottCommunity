@@ -29,4 +29,11 @@ public class ResponseData {
 	public void setData(Object data) {
 		this.data = data;
 	}
+
+	@Override
+	public String toString() {
+		return "ResponseData [code=" + code + ", messages=" + messages + ", data=" + data + "]";
+	}
+	
+	
 }

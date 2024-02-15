@@ -3,6 +3,7 @@ package com.goott.service;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.goott.dto.LoginDTO;
@@ -17,12 +18,15 @@ public class MemberService {
 	
 	private final MemberMapper memberMapper;
 	
+	@Autowired
 	public MemberService(MemberMapper memberMapper) {
 		this.memberMapper = memberMapper;
 	}
+	
 	// 아이디 중복검사
 	public ResponseData hasMemberId(String checkId) throws SQLException, IOException {
 		ResponseData responseData = new ResponseData();
+		
 		if(memberMapper.selectMemberById(checkId) == 0) {
 			responseData.setCode(ResponseEnum.basic_true.getCode());
 			responseData.setMessages(ResponseEnum.basic_true.getMessages());

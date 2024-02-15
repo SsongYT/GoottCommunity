@@ -8,8 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 import com.goott.dto.LoginDTO;
 import com.goott.dto.MemberDTO;
 
-
-
 @Mapper
 public interface MemberMapper {
 	// 회원가입

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ public class MemberController {
 	
 	private final MemberService memberService;
 	
+	@Autowired
 	public MemberController(MemberService memberService) {
 		this.memberService = memberService;
 	}
@@ -34,6 +36,8 @@ public class MemberController {
 	public ResponseEntity<ResponseData> hasCheckId(@PathVariable("checkId") String checkId) {
 		ResponseData responseData = new ResponseData();
 		HttpStatus httpStatus = null;
+		
+		System.out.println("컨트롤");
 		
 		try {
 			responseData = memberService.hasMemberId(checkId);
