@@ -63,6 +63,7 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 
 	@Override
 	public int insertAnswer(AnswerDto answer) throws Exception {
+		
 		return session.insert(ns+".insertAnswer", answer);
 	}
 
@@ -73,7 +74,7 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		    Map<String, Object> map = new HashMap<>();
 		    map.put("list", fileList);
 		    map.put("no", no);
-		    map.put("ref_board_category", ref_board_category);		    
+		    map.put("ref_category_no", ref_board_category);		    
 		    try {
 		        // 실행 결과 row 갯수를 리턴합니다.
 		        count = session.insert(ns + ".insertUploadFiles", map);
@@ -87,7 +88,7 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	@Override
 	public List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) {
 		for (AnswerDto answer : answers) {
-	        if(answer.getFile_count()>0) {
+	        if(answer.getFile_status()>0) {
 	        	answer.setFileList(session.selectList(ns+".getAnswerUploadFile", answer));
 	        }
 	    }

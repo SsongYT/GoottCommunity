@@ -62,7 +62,7 @@
 				onImageUpload : function(files, editor, welEditable) {
 					// 파일 업로드(다중업로드를 위해 반복문 사용)
 					for (let i = files.length - 1; i >= 0; i--) {
-						uploadSummernoteImageFile(files[i]);
+						uploadSummernoteImageFile(files[i], "question");
 					}
 				}
 			}
@@ -126,8 +126,9 @@
 			// 정규표현식을 사용하여 img 태그의 src 속성 삭제.
 			let outputString = boardContent.replace(
 					/<img\s+([^>]*\s)?src="[^"]*"\s?([^>]*)>/g, '<img $1$2>');
-			console.log(typeof(outputString));
-			insertBoard(outputString);
+			let addIdString = outputString.replaceAll('<img ', '<img class="question" '); // id 속성 추가
+			console.log(addIdString);
+			insertBoard(addIdString);
 		} else if(isValidTitle && !isValidContent) {
 			$('#summernote').summernote('focus', true);
 		} else if(!isValidTitle) {

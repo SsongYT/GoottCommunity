@@ -66,7 +66,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 				if(answers != null) {
 					boolean fileExist = false;
 					for (AnswerDto answer : answers) {
-				        if(answer.getFile_count() > 0) {
+				        if(answer.getFile_status() > 0) {
 				        	fileExist = true;
 				        }					
 				    }
@@ -85,9 +85,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	@Override
 	public boolean insertAnswer(AnswerDto answer) throws Exception {		
 		boolean result = false;
-		
 		if (qbDao.insertAnswer(answer) > 0) {
-	        result = insertFiles(answer.getFileList(), answer.getNo(), 2);
+			System.out.println(answer.getAnswer_no());
+	        result = insertFiles(answer.getFileList(), answer.getAnswer_no(), 2);
 	    }
 	    return result;
 	}

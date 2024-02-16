@@ -23,6 +23,6 @@ public class AnswerDto {
 	private Timestamp post_date;
 	private List<UploadFiles> fileList;
 	private int board_category_no = 2;
-	private int file_count;
+	private int file_status;
 	private int no;
 }

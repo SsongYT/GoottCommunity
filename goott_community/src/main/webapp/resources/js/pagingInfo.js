@@ -1,5 +1,5 @@
 function createPagingInfo(totalPostCntData, pageNoData) {
-	    let viewPostCntPerPage = 2; // 한 페이지당 보여줄 글의 개수
+	    let viewPostCntPerPage = 10; // 한 페이지당 보여줄 글의 개수
 	    let pageCntPerBlock = 3; // 한 블록당 보여줄 페이지의 개수
 		let totalPostCnt = totalPostCntData;
 	    let pageNo = pageNoData;

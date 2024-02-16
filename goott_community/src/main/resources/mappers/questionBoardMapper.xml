@@ -23,11 +23,14 @@
 		VALUES(#{writer}, #{title},
 		#{content}, #{category})
 	</insert>
-	
-	<insert id="insertAnswer">
-	INSERT INTO answers
+
+	<insert id="insertAnswer"
+		parameterType="com.goott.vodto.ksh.AnswerDto"
+		useGeneratedKeys="true" keyProperty="answer_no">
+		INSERT INTO answers
 		(writer, content, ref, ref_category_no)
-		VALUES(#{writer}, #{content}, #{ref}, 1)
+		VALUES(#{writer},
+		#{content}, #{ref}, 1)
 	</insert>
 
 	<insert id="insertUploadFiles">
@@ -67,7 +70,7 @@
 		resultType="com.goott.vodto.ksh.AnswerDto">
 		SELECT a.*,
 		CASE WHEN u.file_count > 0 THEN file_count ELSE
-		0 END AS file_count
+		0 END AS file_status
 		FROM answers a
 		LEFT JOIN (
 		SELECT board_no, COUNT(*)
@@ -79,10 +82,12 @@
 		WHERE a.ref = #{no} and a.ref_category_no = 1;
 	</select>
 
-	<select id="getAnswerUploadFile" resultType="com.goott.vodto.ksh.UploadFiles">
+	<select id="getAnswerUploadFile"
+		resultType="com.goott.vodto.ksh.UploadFiles">
 		SELECT * FROM upload_file
-		WHERE board_no = #{answer_no} AND ref_category_no = #{board_category_no}
+		WHERE board_no = #{answer_no} AND
+		ref_category_no = #{board_category_no}
 	</select>
 
-	
+
 </mapper>

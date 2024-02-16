@@ -77,7 +77,7 @@
 					onImageUpload : function(files, editor, welEditable) {
 						// 파일 업로드(다중업로드를 위해 반복문 사용)
 						for (let i = files.length - 1; i >= 0; i--) {
-							uploadSummernoteImageFile(files[i]);
+							uploadSummernoteImageFile(files[i], "answer");
 						}
 					}
 				}
@@ -113,16 +113,9 @@
 			output += `<h2>\${data.detailBoard.title}</h2><hr>`;
 			output += `<div>\${data.detailBoard.content}</div><hr>`;
 		}
-		
+
 		$('.outputBody').html(output);
-		
-		if($('img').length > 0) {
-			let imgUrl = "/app/resources/summernote/questionBoardUploadFiles/"
-			let imgElements = document.getElementsByTagName("img");
-			for(let i = 0; i < $('img').length; i++) {
-				imgElements[i].src = imgUrl+data.detailFiles[i].new_fileName;
-			}
-		}
+		showImg(data,"question");
 		
 		// 답변이 있다면
 		if(data.detailAnswers != null) {
@@ -137,20 +130,43 @@
 			<i class="fa-solid fa-circle-chevron-down upAndDown"></i>
 			</div>
 			
-			<div class="container col-xs-11"><p>\${item.writer} \${formattedDate}</p><div>\${item.content}</div></div></div>`;
+			<div class="container col-xs-11"><div>\${item.writer} \${formattedDate}</div><div>\${item.content}</div></div></div><hr>`;
 			
 			});
 			$('.outputAnswers').html(outputAnswers);
 			let outputAnswersCount = data.detailBoard.answerCount+" Answer";
 			if(items.length > 1) {
 				outputAnswersCount += "s";
-			} 
+			} else {
+				
+				$(".outputAnswers").after("<hr>");
+			}
 			$('#answerCount').html(outputAnswersCount);
-			$(".outputAnswers").after("<hr>");
+			showImg(data, "answer");
 		}
 	}
 	
-	
+	function showImg(data, imgPath) {
+		console.log(data.detailAnswers);
+		console.log(imgPath);
+		let imgCount = document.querySelectorAll('.'+imgPath).length;
+		if(imgCount > 0) {
+			console.log(imgCount)
+			let imgUrl = "/app/resources/summernote/questionBoard/"+imgPath+"/"
+			let imgElements = document.getElementsByClassName(imgPath);
+			if(imgPath == "question") {				
+				for(let i = 0; i < imgCount; i++) {
+					imgElements[i].src = imgUrl+data.detailFiles[i].new_fileName;
+				}
+			} else {
+				for(let i = 0; i < imgCount; i++) {
+					for(let j = 0; j < data.detailAnswers[i].fileList.length; j++) {						
+						imgElements[i].src = imgUrl+data.detailAnswers[i].fileList[j].new_fileName;
+					}
+				}
+			}
+		}
+	}
 	
 	// 답변 유효성 검사
 	function isValidAnswer() {
@@ -165,7 +181,8 @@
 				// 정규표현식을 사용하여 img 태그의 src 속성 삭제.
 				let outputString = answerContent.replace(
 						/<img\s+([^>]*\s)?src="[^"]*"\s?([^>]*)>/g, '<img $1$2>');
-				insertAnswer(outputString);							
+				let addIdString = outputString.replaceAll('<img ', '<img class="answer" '); // id 속성 추가
+				insertAnswer(addIdString);							
 			}
 		} else {
 			alert("로그인 후 작성 가능합니다.");

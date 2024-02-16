@@ -113,17 +113,21 @@ public class QuestionBoardController {
 	}
 
 	// Summernote 이미지 업로드
-	@RequestMapping(value = "uploadSummernoteImageFile", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "uploadSummernoteImageFile/{savePath}", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	public ResponseEntity<Map<String, Object>> uploadSummernoteImageFile(@RequestParam("file") MultipartFile uploadFile,
-			HttpServletRequest request) {
+			HttpServletRequest request, @PathVariable String savePath) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		// 1. 파일이 저장될 경로 확인
 		UploadFiles file = null;
-		String relativePath = "/resources/summernote/questionBoardUploadFiles";
-		String realPath = request.getSession().getServletContext()
-				.getRealPath("resources/summernote/questionBoardUploadFiles");
-		System.out.println(realPath.toString());
+		String paths[];
+		if(savePath.equals("question")) {			
+			paths = getRealPath(request, "question");
+		} else {
+		    paths = getRealPath(request, "answer");
+		}
+		String relativePath = paths[0];
+		String realPath = paths[1];
 		try {
 			// 2. 서비스단에 데이터 전송
 			file = ufService.uploadFile(uploadFile.getOriginalFilename(), uploadFile.getSize(),
@@ -133,7 +137,7 @@ public class QuestionBoardController {
 		}
 
 		if (file != null) {
-			String imageUrl = request.getContextPath() + relativePath + "/" + file.getNew_fileName();
+			String imageUrl = request.getContextPath() +"/"+ relativePath + "/" + file.getNew_fileName();
 			map.put("file", file);
 			map.put("url", imageUrl);
 			map.put("status", "success");
@@ -146,6 +150,13 @@ public class QuestionBoardController {
 		return result;
 
 	}
+	
+	// 파일 저장 경로 얻기
+	public String[] getRealPath(HttpServletRequest request, String subPath) {
+	    String relativePath = "resources/summernote/questionBoard/" + subPath;
+	    String realPath = request.getSession().getServletContext().getRealPath(relativePath);
+	    return new String[] { relativePath, realPath };
+	}
 
 	// 질문 게시글 작성
 	@RequestMapping(value = "insertBoard", method = RequestMethod.POST)
@@ -153,7 +164,7 @@ public class QuestionBoardController {
 			HttpServletRequest request) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println(qBoard.toString());
+		System.out.println(qBoard.toString());		
 		try {
 			// insert 성공 시
 			if (qbService.insertBoard(qBoard)) {
@@ -177,6 +188,7 @@ public class QuestionBoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ResponseEntity<Map<String, Object>> result = null;
 		answer.setRef(no);
+		System.out.println(answer.toString());
 		try {
 			if(qbService.insertAnswer(answer)) {
 				map.put("status", "success");
