@@ -37,11 +37,9 @@ public class MemberController {
 		ResponseData responseData = new ResponseData();
 		HttpStatus httpStatus = null;
 		
-		System.out.println("컨트롤");
-		
 		try {
 			responseData = memberService.hasMemberId(checkId);
-			
+
 			if(responseData.getCode().equals("000")){
 				httpStatus = HttpStatus.OK;
 			} else {
@@ -54,7 +52,7 @@ public class MemberController {
 //			responseData.setCode(ExceptionEnum.SQLException.getCode());
 //			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 		}
-		
+		System.out.println(responseData);
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
 	}
 	
@@ -124,12 +122,15 @@ public class MemberController {
 			responseData = memberService.canLoginMember(loginDTO);
 			if(responseData.getCode().equals("000")){
 				session.setAttribute("loginMember", loginDTO.getUserId());
+
 				httpStatus = HttpStatus.OK;
 			} else {
+
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 			
 		} catch (SQLException | IOException e) {
+
 //			responseData = new ResponseData();
 //			httpStatus = ExceptionEnum.SQLException.getHttpStatus();
 //			responseData.setCode(ExceptionEnum.SQLException.getCode());

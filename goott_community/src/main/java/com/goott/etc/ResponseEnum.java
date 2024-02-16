@@ -1,5 +1,9 @@
 package com.goott.etc;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public enum ResponseEnum {
 	
 	basic_true("000", "성공"),
@@ -17,22 +21,6 @@ public enum ResponseEnum {
 
 	ResponseEnum(String code, String messages) {
 		this.code = code;
-		this.messages = messages;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public String getMessages() {
-		return messages;
-	}
-
-	public void setMessages(String messages) {
 		this.messages = messages;
 	}
 	
