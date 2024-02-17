@@ -1,10 +1,13 @@
 package com.goott.controller.ksh;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -47,8 +50,6 @@ public class QuestionBoardController {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<QuestionBoardDto> list = null;
-		System.out.println(pageNo);
-
 		try {
 			int totalPostCnt = qbService.getTotalPostCnt();
 			list = qbService.getAllBoard();
@@ -57,16 +58,13 @@ public class QuestionBoardController {
 				map.put("pageNo", pageNo);
 				map.put("list", list);
 				map.put("status", "success");
-				System.out.println(map.toString());
 				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException | NamingException e) {
 			map.put("status", "error");
 			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+			e.printStackTrace();
 		}
-
 		return result;
 	}
 
@@ -93,7 +91,7 @@ public class QuestionBoardController {
 				map.put("status", "error");
 				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
 			}
-		} catch (Exception e) {
+		} catch (SQLException | NamingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			map.put("status", "error");
@@ -121,10 +119,10 @@ public class QuestionBoardController {
 		// 1. 파일이 저장될 경로 확인
 		UploadFiles file = null;
 		String paths[];
-		if(savePath.equals("question")) {			
+		if (savePath.equals("question")) {
 			paths = getRealPath(request, "question");
 		} else {
-		    paths = getRealPath(request, "answer");
+			paths = getRealPath(request, "answer");
 		}
 		String relativePath = paths[0];
 		String realPath = paths[1];
@@ -132,12 +130,11 @@ public class QuestionBoardController {
 			// 2. 서비스단에 데이터 전송
 			file = ufService.uploadFile(uploadFile.getOriginalFilename(), uploadFile.getSize(),
 					uploadFile.getContentType(), uploadFile.getBytes(), realPath);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		if (file != null) {
-			String imageUrl = request.getContextPath() +"/"+ relativePath + "/" + file.getNew_fileName();
+			String imageUrl = request.getContextPath() + "/" + relativePath + "/" + file.getNew_fileName();
 			map.put("file", file);
 			map.put("url", imageUrl);
 			map.put("status", "success");
@@ -150,12 +147,12 @@ public class QuestionBoardController {
 		return result;
 
 	}
-	
+
 	// 파일 저장 경로 얻기
 	public String[] getRealPath(HttpServletRequest request, String subPath) {
-	    String relativePath = "resources/summernote/questionBoard/" + subPath;
-	    String realPath = request.getSession().getServletContext().getRealPath(relativePath);
-	    return new String[] { relativePath, realPath };
+		String relativePath = "resources/summernote/questionBoard/" + subPath;
+		String realPath = request.getSession().getServletContext().getRealPath(relativePath);
+		return new String[] { relativePath, realPath };
 	}
 
 	// 질문 게시글 작성
@@ -164,16 +161,18 @@ public class QuestionBoardController {
 			HttpServletRequest request) {
 		ResponseEntity<Map<String, Object>> result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
-		System.out.println(qBoard.toString());		
+		System.out.println(qBoard.toString());
 		try {
 			// insert 성공 시
 			if (qbService.insertBoard(qBoard)) {
 				System.out.println("게시글 업로드 완료");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (SQLException | NamingException e) {
+			// insert 실패 시 업로드 파일이 있었다면 사용자 기기에서 파일 삭제
+			deleteFile("question", qBoard.getFileList(), request);
 			map.put("status", "fail");
 			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+			e.printStackTrace();
 		}
 		map.put("status", "success");
 		result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
@@ -188,18 +187,30 @@ public class QuestionBoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		ResponseEntity<Map<String, Object>> result = null;
 		answer.setRef(no);
-		System.out.println(answer.toString());
 		try {
-			if(qbService.insertAnswer(answer)) {
+			if(qbService.insertAnswer(answer)) {				
 				map.put("status", "success");
 				result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (SQLException | NamingException e) {
+			// insert 실패 시 업로드 파일이 있었다면 사용자 기기에서 파일 삭제
+			deleteFile("answer", answer.getFileList(), request);
 			map.put("status", "fail");
 			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
 			e.printStackTrace();
 		}
 		return result;
+	}
+
+	// 사용자 기기에서 파일 삭제
+	public void deleteFile(String subPath, List<UploadFiles> fileList, HttpServletRequest request) {
+		// 파일이 있다면
+		if (!fileList.isEmpty()) {
+			String relativePath = "resources/summernote/questionBoard/" + subPath;
+			String realPath = request.getSession().getServletContext().getRealPath(relativePath);
+			for (UploadFiles file : fileList) {
+				ufService.deleteFile(file.getNew_fileName(), realPath);
+			}
+		}
 	}
 }

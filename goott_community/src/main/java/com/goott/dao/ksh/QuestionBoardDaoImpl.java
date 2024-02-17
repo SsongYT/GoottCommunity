@@ -1,10 +1,12 @@
 package com.goott.dao.ksh;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.naming.NamingException;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
@@ -18,83 +20,75 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 
 	@Inject
 	SqlSession session;
-	
+
 	private String ns = "com.goott.mappers.questionBoardMapper";
-	
+
 	@Override
-	public int getTotalPostCnt() throws Exception {
+	public int getTotalPostCnt() throws SQLException, NamingException {
 		// 총 게시글 개수
-		return session.selectOne(ns+".getTotalPostCnt");
+		return session.selectOne(ns + ".getTotalPostCnt");
 	}
 
 	@Override
-	public List<QuestionBoardDto> getAllBoard() throws Exception {
+	public List<QuestionBoardDto> getAllBoard() throws SQLException, NamingException {
 
-		return session.selectList(ns+".getAllBoard");
+		return session.selectList(ns + ".getAllBoard");
 	}
 
 	@Override
-	public int insertBoard(QuestionBoardDto qBoard) throws Exception {
-		
-		return session.insert(ns+".insertBoard", qBoard);
+	public int insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException {
+
+		return session.insert(ns + ".insertBoard", qBoard);
 	}
 
 	@Override
-	public QuestionBoardDto getDetailBoard(int no) throws Exception {
-		
+	public QuestionBoardDto getDetailBoard(int no) throws SQLException, NamingException {
+
 		return session.selectOne(ns + ".getDetailBoard", no);
 	}
 
-	
 	@Override
-	public List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws Exception {
-		 Map<String, Object> map = new HashMap<>();
-		    map.put("ref_category_no", ref_category_no);
-		    map.put("no", no);
+	public List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws SQLException, NamingException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("ref_category_no", ref_category_no);
+		map.put("no", no);
 		return session.selectList(ns + ".getBoardUploadFile", map);
 	}
 
 	@Override
-	public List<AnswerDto> getAllAnswers(int no) throws Exception {
-		// TODO Auto-generated method stub
+	public List<AnswerDto> getAllAnswers(int no) throws SQLException, NamingException {
+
 		return session.selectList(ns + ".getAllAnswers", no);
 
 	}
 
 	@Override
-	public int insertAnswer(AnswerDto answer) throws Exception {
-		
-		return session.insert(ns+".insertAnswer", answer);
-	}
-
-
-	@Override
-	public int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws Exception {
-		 int count = 0;
-		    Map<String, Object> map = new HashMap<>();
-		    map.put("list", fileList);
-		    map.put("no", no);
-		    map.put("ref_category_no", ref_board_category);		    
-		    try {
-		        // 실행 결과 row 갯수를 리턴합니다.
-		        count = session.insert(ns + ".insertUploadFiles", map);
-		        System.out.println(count + "개 insert 완료");
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		    }
-		    return count;
+	public int insertAnswer(AnswerDto answer) throws SQLException, NamingException {
+		return session.insert(ns + ".insertAnswer", answer);
 	}
 
 	@Override
-	public List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) {
+	public int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws SQLException, NamingException {
+		int count = 0;
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", fileList);
+		map.put("no", no);
+		map.put("ref_category_no", ref_board_category);
+		count = session.insert(ns + ".insertUploadFiles", map);
+		System.out.println(count + "개 insert 완료");
+
+		return count;
+	}
+
+	@Override
+	public List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) throws SQLException, NamingException {
 		for (AnswerDto answer : answers) {
-	        if(answer.getFile_status()>0) {
-	        	answer.setFileList(session.selectList(ns+".getAnswerUploadFile", answer));
-	        }
-	    }
-	    return answers;
+			if (answer.getFile_status() > 0) {
+				answer.setFileList(session.selectList(ns + ".getAnswerUploadFile", answer));
+			}
+		}
+		return answers;
 
 	}
 
-	
 }

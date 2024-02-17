@@ -1,6 +1,9 @@
 package com.goott.dao.ksh;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import javax.naming.NamingException;
 
 import com.goott.vodto.ksh.AnswerDto;
 import com.goott.vodto.ksh.QuestionBoardDto;
@@ -8,23 +11,23 @@ import com.goott.vodto.ksh.UploadFiles;
 
 public interface QuestionBoardDao {
 	
-	int getTotalPostCnt() throws Exception;
+	int getTotalPostCnt() throws SQLException, NamingException;
 
-	List<QuestionBoardDto> getAllBoard() throws Exception;
+	List<QuestionBoardDto> getAllBoard() throws SQLException, NamingException;
 
-	int insertBoard(QuestionBoardDto qBoard) throws Exception;
+	int insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException;
 
-	int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws Exception;
+	int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws SQLException, NamingException;
 
-	QuestionBoardDto getDetailBoard(int no) throws Exception;
+	QuestionBoardDto getDetailBoard(int no) throws SQLException, NamingException;
 
-	List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws Exception;
+	List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws SQLException, NamingException;
 
-	List<AnswerDto> getAllAnswers(int no) throws Exception;
+	List<AnswerDto> getAllAnswers(int no) throws SQLException, NamingException;
 
-	int insertAnswer(AnswerDto answer) throws Exception;
+	int insertAnswer(AnswerDto answer) throws SQLException, NamingException;
 
-	List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers);
+	List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) throws SQLException, NamingException;
 
 
 

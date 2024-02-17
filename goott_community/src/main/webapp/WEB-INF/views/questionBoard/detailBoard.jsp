@@ -115,7 +115,10 @@
 		}
 
 		$('.outputBody').html(output);
-		showImg(data,"question");
+		if(data.detailFiles != null) {
+			
+				showImg(data,"question");
+		}
 		
 		// 답변이 있다면
 		if(data.detailAnswers != null) {
@@ -137,13 +140,11 @@
 			let outputAnswersCount = data.detailBoard.answerCount+" Answer";
 			if(items.length > 1) {
 				outputAnswersCount += "s";
-			} else {
+			} 
 				
-				$(".outputAnswers").after("<hr>");
-			}
 			$('#answerCount').html(outputAnswersCount);
 			showImg(data, "answer");
-		}
+		} 
 	}
 	
 	function showImg(data, imgPath) {
@@ -154,15 +155,18 @@
 			console.log(imgCount)
 			let imgUrl = "/app/resources/summernote/questionBoard/"+imgPath+"/"
 			let imgElements = document.getElementsByClassName(imgPath);
+			console.log(imgElements);
 			if(imgPath == "question") {				
 				for(let i = 0; i < imgCount; i++) {
 					imgElements[i].src = imgUrl+data.detailFiles[i].new_fileName;
 				}
-			} else {
-				for(let i = 0; i < imgCount; i++) {
-					for(let j = 0; j < data.detailAnswers[i].fileList.length; j++) {						
-						imgElements[i].src = imgUrl+data.detailAnswers[i].fileList[j].new_fileName;
-					}
+			} else {				
+				for(let i = 0; i < data.detailAnswers.length; i++) {	// 답변 개수만큼 반복
+					if(data.detailAnswers[i].fileList != null) {	// 파일이 있는 답변인지
+						for(let j = 0; j < data.detailAnswers[i].fileList.length; j++) {						
+							imgElements[j].src = imgUrl+data.detailAnswers[i].fileList[j].new_fileName;
+						}
+					}				
 				}
 			}
 		}
@@ -196,8 +200,7 @@
 				"writer" : "bbiyagi",
 				"content" : content,
 				fileList,
-		}
-		
+		}		
 		$.ajax({
 			url : "/app/questionBoard/"+"${no}"+"/insertAnswer",
 			type : "POST",
@@ -205,14 +208,14 @@
 			data : JSON.stringify(sendAnswer),
 			async : false, 
 			success : function(data) {
-				console.log("업로드성공", data);
 				if (data.status == "success") {
-					console.log(data);
+					 $('#summernote').summernote('code', ''); // 에디터 비우기
 					showDetailBoard();
 				}
 			},
 			error : function(data) {
-				console.log("업로드 실패", data);
+				console.log(data);
+				alert("오류로 인한 답변 등록 실패");
 			}
 		});
 	}
