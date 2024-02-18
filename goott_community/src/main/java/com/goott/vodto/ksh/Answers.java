@@ -22,4 +22,5 @@ public class Answers {
 	private int ref;
 	private Timestamp post_date;
 	private List<UploadFiles> fileList;
+	private int like_count;
 }

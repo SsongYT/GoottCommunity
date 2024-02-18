@@ -125,12 +125,12 @@
 			let items = data.detailAnswers;
 			let outputAnswers = "";
 			$.each(items, function(i, item) {
-			// 미리보기 test. upAndDownCount 데이터 받아올 예정.
+			// 미리보기 test. likeCount 데이터 받아올 예정.
 			let formattedDate = moment(item.post_date).format('YYYY-MM-DD HH:mm');
 			outputAnswers += `<div class="row">
-			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up upAndDown"></i>
-			<span class="upAndDownCount">0</span>
-			<i class="fa-solid fa-circle-chevron-down upAndDown"></i>
+			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up up"></i>
+			<span class="likeCount">\${item.like_count}</span>
+			<i class="fa-solid fa-circle-chevron-down down"></i>
 			</div>
 			
 			<div class="container col-xs-11"><div>\${item.writer} \${formattedDate}</div><div>\${item.content}</div></div></div><hr>`;
@@ -241,11 +241,11 @@
 		align-items: center;
 	}
 	
-	.upAndDown {
+	.fa-solid {
 		font-size : 2em;
 	}
 	
-	.upAndDownCount {
+	.likeCount {
 		font-size: 25px;
 	}
 	

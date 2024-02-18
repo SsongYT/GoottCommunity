@@ -14,16 +14,11 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AnswerDto {
-	private int answer_no;
-	private String writer;
-	private String content;
+public class LikeLogs {
+	private int like_no;
+	private String memberId;
+	private Timestamp date;
+	private int likeStatus;
+	private int board_no;
 	private int ref_category_no;
-	private int ref;
-	private Timestamp post_date;
-	private List<UploadFiles> fileList;
-	private int board_category_no = 2;
-	private int file_status;
-	private int no;
-	private int like_count;
 }
