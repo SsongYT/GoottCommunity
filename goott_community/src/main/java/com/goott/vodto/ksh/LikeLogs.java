@@ -16,9 +16,9 @@ import lombok.ToString;
 @ToString
 public class LikeLogs {
 	private int like_no;
-	private String memberId;
+	private String member_id;
 	private Timestamp date;
-	private int likeStatus;
+	private int like_status;
 	private int board_no;
 	private int ref_category_no;
 }

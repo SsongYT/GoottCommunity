@@ -128,9 +128,9 @@
 			// 미리보기 test. likeCount 데이터 받아올 예정.
 			let formattedDate = moment(item.post_date).format('YYYY-MM-DD HH:mm');
 			outputAnswers += `<div class="row">
-			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up up"></i>
+			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up up" onclick="likeThisAnswer(\${item.answer_no}, 1)"></i>
 			<span class="likeCount">\${item.like_count}</span>
-			<i class="fa-solid fa-circle-chevron-down down"></i>
+			<i class="fa-solid fa-circle-chevron-down down" onclick="likeThisAnswer(\${item.answer_no}, 1)"></i>
 			</div>
 			
 			<div class="container col-xs-11"><div>\${item.writer} \${formattedDate}</div><div>\${item.content}</div></div></div><hr>`;
@@ -145,6 +145,32 @@
 			$('#answerCount').html(outputAnswersCount);
 			showImg(data, "answer");
 		} 
+	}
+	
+	function likeThisAnswer(answerNo, likeStatus) {
+		let sendLikeStatus = {
+				"member_id" : "bbiyagi",
+				"like_status" : likeStatus,
+				"board_no" : answerNo,
+				"ref_category_no" : 2,
+		}	
+		$.ajax({
+			url : "/app/questionBoard/likeAnswer",
+			type : "POST",
+			contentType : "application/json",
+			data : JSON.stringify(sendLikeStatus),
+			async : false, 
+			success : function(data) {
+				if (data.status == "success") {
+					 $('#summernote').summernote('code', ''); // 에디터 비우기
+					showDetailBoard();
+				}
+			},
+			error : function(data) {
+				console.log(data);
+				alert("오류로 인한 답변 등록 실패");
+			}
+		});
 	}
 	
 	function showImg(data, imgPath) {

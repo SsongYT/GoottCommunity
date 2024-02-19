@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.goott.dao.ksh.QuestionBoardDao;
 import com.goott.vodto.ksh.AnswerDto;
+import com.goott.vodto.ksh.LikeLogs;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -41,7 +42,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 		boolean result = false;
 		if (qbDao.insertBoard(qBoard) > 0) {
 			result = insertFiles(qBoard.getFileList(), qBoard.getNo(), 1);
-		} 
+		}
 		return result;
 	}
 
@@ -52,18 +53,19 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 		boolean result = false;
 		if (qbDao.insertAnswer(answer) > 0) {
 			result = insertFiles(answer.getFileList(), answer.getAnswer_no(), 2);
-		} 
+		}
 		return result;
 	}
 
 	// 파일 insert
-	private boolean insertFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws SQLException, NamingException {
+	private boolean insertFiles(List<UploadFiles> fileList, int no, int ref_board_category)
+			throws SQLException, NamingException {
 		if (fileList.isEmpty()) {
 			return true; // 파일이 없는 경우 바로 true 반환
 		}
 		int successCount = qbDao.insertUploadFiles(fileList, no, ref_board_category);
-		System.out.println("파일 insert 완료 개수: " + successCount);		
-		return successCount == fileList.size();		
+		System.out.println("파일 insert 완료 개수: " + successCount);
+		return successCount == fileList.size();
 	}
 
 	@Override
@@ -97,6 +99,28 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 					result.put("detailAnswers", answers);
 				}
 			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean insertLikeLogs(LikeLogs likeLogs) {
+		boolean result = false;
+		// 좋아요 한 적이 있는지
+		int likeStatus = qbDao.getLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(),
+				likeLogs.getRef_category_no());
+		
+		// 좋아요 한 이력이 없을 땐 새로 insert
+		if(likeStatus == 0) {
+			qbDao.insertLikeLogs();
+			
+		// 좋아요 한 이력이 있고 likeStatus가 같은 값일 때 true 반환
+		} else if (likeStatus == likeLogs.getLike_status()) {
+			result = true;
+			
+		// 좋아요 한 이력이 있고 likeStatus가 다른 값일 때 update
+		} else {
+			qbDao.updateLikeLogs();
 		}
 		return result;
 	}

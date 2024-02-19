@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.naming.NamingException;
 
 import com.goott.vodto.ksh.AnswerDto;
+import com.goott.vodto.ksh.LikeLogs;
 import com.goott.vodto.ksh.QuestionBoardDto;
 
 public interface QuestionBoardService {
@@ -20,6 +21,8 @@ public interface QuestionBoardService {
 	Map<String, Object> getDetailBoard(int no) throws SQLException, NamingException;
 
 	boolean insertAnswer(AnswerDto answer) throws SQLException, NamingException;
+
+	boolean insertLikeLogs(LikeLogs likeLogs);
 	
 
 }

@@ -25,8 +25,8 @@
 	</insert>
 
 	<insert id="insertAnswer"
-		parameterType="com.goott.vodto.ksh.AnswerDto"
-		useGeneratedKeys="true" keyProperty="answer_no">
+		parameterType="com.goott.vodto.ksh.AnswerDto" useGeneratedKeys="true"
+		keyProperty="answer_no">
 		INSERT INTO answers
 		(writer, content, ref, ref_category_no)
 		VALUES(#{writer},
@@ -89,5 +89,10 @@
 		ref_category_no = #{board_category_no}
 	</select>
 
+	<select id="getLikeLogs" resultType="java.lang.Integer">
+		SELECT IFNULL(like_status, 0) from
+		like_logs WHERE member_id = #{member_id} AND board_no = #{board_no} AND ref_category_no
+		= #{ref_category_no}
+	</select>
 
 </mapper>

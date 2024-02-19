@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.goott.service.ksh.QuestionBoardService;
 import com.goott.service.ksh.UploadFileService;
 import com.goott.vodto.ksh.AnswerDto;
+import com.goott.vodto.ksh.LikeLogs;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -213,4 +214,17 @@ public class QuestionBoardController {
 			}
 		}
 	}
+	
+	// 질문 게시글에 대한 답변 등록
+		@RequestMapping(value = "likeAnswer", method = RequestMethod.POST)
+		public ResponseEntity<Map<String, Object>> likeAnswer(@RequestBody LikeLogs likeLogs, HttpServletRequest request) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			ResponseEntity<Map<String, Object>> result = null;
+			System.out.println(likeLogs.toString());			
+			if(likeLogs != null) {				
+				qbService.insertLikeLogs(likeLogs);
+			}
+			
+			return result;
+		}
 }

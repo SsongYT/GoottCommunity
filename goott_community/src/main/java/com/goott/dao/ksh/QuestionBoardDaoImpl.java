@@ -91,4 +91,14 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 
 	}
 
+	@Override
+	public int getLikeLogs(String member_id, int board_no, int ref_category_no) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("member_id", member_id);
+		map.put("board_no", board_no);
+		map.put("ref_category_no", ref_category_no);
+		return session.selectOne(ns+".getLikeLogs", map);
+		
+	}
+
 }
