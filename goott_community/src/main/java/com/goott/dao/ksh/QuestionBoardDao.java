@@ -29,7 +29,11 @@ public interface QuestionBoardDao {
 
 	List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) throws SQLException, NamingException;
 
-	int getLikeLogs(String member_id, int board_no, int ref_category_no);
+	int getLikeLogs(String member_id, int board_no, int ref_category_no) throws SQLException, NamingException;
+
+	int insertLikeLogs() throws SQLException, NamingException;
+
+	int updateLikeLogs() throws SQLException, NamingException;
 
 
 

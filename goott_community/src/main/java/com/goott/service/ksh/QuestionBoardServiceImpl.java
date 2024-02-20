@@ -104,7 +104,7 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	}
 
 	@Override
-	public boolean insertLikeLogs(LikeLogs likeLogs) {
+	public boolean insertLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
 		boolean result = false;
 		// 좋아요 한 적이 있는지
 		int likeStatus = qbDao.getLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(),
