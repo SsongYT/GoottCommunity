@@ -109,18 +109,26 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 		// 좋아요 한 적이 있는지
 		int likeStatus = qbDao.getLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(),
 				likeLogs.getRef_category_no());
-		
+		result = returnResult(likeStatus, likeLogs);
+		return result;
+	}
+
+	private boolean returnResult(int likeStatus, LikeLogs likeLogs) throws SQLException, NamingException {
+		boolean result = false;
+
 		// 좋아요 한 이력이 없을 땐 새로 insert
-		if(likeStatus == 0) {
-			qbDao.insertLikeLogs();
-			
+		if (likeStatus == 0) {
+			if (qbDao.insertLikeLogs() > 0) {
+				result = true;
+			}
 		// 좋아요 한 이력이 있고 likeStatus가 같은 값일 때 true 반환
 		} else if (likeStatus == likeLogs.getLike_status()) {
 			result = true;
-			
 		// 좋아요 한 이력이 있고 likeStatus가 다른 값일 때 update
 		} else {
-			qbDao.updateLikeLogs();
+			if (qbDao.updateLikeLogs() > 0) {
+				result = true;
+			}
 		}
 		return result;
 	}

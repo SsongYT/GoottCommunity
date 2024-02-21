@@ -101,4 +101,16 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		
 	}
 
+	@Override
+	public int insertLikeLogs() throws SQLException, NamingException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateLikeLogs() throws SQLException, NamingException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
