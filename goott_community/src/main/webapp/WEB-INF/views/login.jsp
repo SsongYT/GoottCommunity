@@ -47,6 +47,7 @@
 	       		  }
 	       	  },
 	       	  error: function(error) {
+	       		  console.log(error);
 	       		if(error.responseJSON.code == "L01") {
 	       			alert("아이디를 확인하여주세요.");
 	       		} else if(error.responseJSON.code == "L02") {

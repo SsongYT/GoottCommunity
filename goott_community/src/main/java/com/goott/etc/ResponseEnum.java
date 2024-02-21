@@ -1,7 +1,6 @@
 package com.goott.etc;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
 public enum ResponseEnum {

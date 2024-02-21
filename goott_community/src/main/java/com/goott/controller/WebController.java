@@ -27,12 +27,12 @@ public class WebController {
 		
 		session.invalidate();
 		
-		return "index";
+		return "home";
 	}
 	
 	// 자유게시판 페이지 이동
-	@GetMapping("/freedom")
-	public String openPageFreedom() {
-		return "freedom";
+	@GetMapping("/freeboard")
+	public String openPageFreeBoard() {
+		return "freeboard";
 	}
 }

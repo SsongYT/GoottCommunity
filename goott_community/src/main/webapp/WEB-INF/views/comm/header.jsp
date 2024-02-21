@@ -30,7 +30,7 @@
 				<ul class="navbar-nav me-auto">
 					<c:choose>
 						<c:when test="${sessionScope.loginMember != null}">
-							<li class="nav-item"><a class="nav-link" href="/freedom">자유게시판</a></li>
+							<li class="nav-item"><a class="nav-link" href="/freeboard">자유게시판</a></li>
 							<li class="nav-item"><a class="nav-link" href="/question">질문게시판</a></li>
 						</c:when>
 					</c:choose>
