@@ -104,33 +104,39 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	}
 
 	@Override
-	public boolean insertLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
-		boolean result = false;
+	public String dealWithLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
 		// 좋아요 한 적이 있는지
 		int likeStatus = qbDao.getLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(),
 				likeLogs.getRef_category_no());
-		result = returnResult(likeStatus, likeLogs);
-		return result;
+		return returnResult(likeStatus, likeLogs);
 	}
 
-	private boolean returnResult(int likeStatus, LikeLogs likeLogs) throws SQLException, NamingException {
-		boolean result = false;
+	// 좋아요 상호작용 결과 메세지 반환
+	private String returnResult(int likeStatus, LikeLogs likeLogs) throws SQLException, NamingException {
+		String result = "";
+		String message = likeLogs.getLike_status() == 1 ? "추천하였습니다." : "비추천하였습니다.";
+		// like_status: 1 = like, -1 = dislike
 
 		// 좋아요 한 이력이 없을 땐 새로 insert
 		if (likeStatus == 0) {
-			if (qbDao.insertLikeLogs() > 0) {
-				result = true;
+			if (qbDao.insertLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(),
+					likeLogs.getLike_status()) > 0) {
+				result = message;
 			}
-		// 좋아요 한 이력이 있고 likeStatus가 같은 값일 때 true 반환
+
+			// 좋아요 한 이력이 있고 likeStatus가 같은 값일 때 true 반환
 		} else if (likeStatus == likeLogs.getLike_status()) {
-			result = true;
-		// 좋아요 한 이력이 있고 likeStatus가 다른 값일 때 update
+			result = "이미 " + message;
+
+			// 좋아요 한 이력이 있고 likeStatus가 다른 값일 때 update
 		} else {
-			if (qbDao.updateLikeLogs() > 0) {
-				result = true;
+			if (qbDao.updateLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(),
+					likeLogs.getLike_status()) > 0) {
+				result = message;
 			}
 		}
 		return result;
+
 	}
 
 }

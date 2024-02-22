@@ -90,9 +90,24 @@
 	</select>
 
 	<select id="getLikeLogs" resultType="java.lang.Integer">
-		SELECT IFNULL(like_status, 0) from
-		like_logs WHERE member_id = #{member_id} AND board_no = #{board_no} AND ref_category_no
+		SELECT IFNULL(like_status,
+		0) from
+		like_logs WHERE member_id = #{member_id} AND board_no =
+		#{board_no} AND ref_category_no
 		= #{ref_category_no}
 	</select>
+
+	<insert id="insertLikeLogs">
+		INSERT INTO like_logs (member_id, like_status,
+		board_no, ref_category_no) VALUES (#{member_id}, #{like_status},
+		#{board_no}, #{ref_category_no})
+	</insert>
+
+	<update id="updateLikeLogs">
+		UPDATE like_logs SET like_status = #{like_status} 
+		WHERE board_no = #{board_no} 
+		and ref_category_no = #{ref_category_no} 
+		and member_id = #{member_id}
+	</update>
 
 </mapper>

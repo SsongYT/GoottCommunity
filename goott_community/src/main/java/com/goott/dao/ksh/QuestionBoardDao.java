@@ -31,9 +31,9 @@ public interface QuestionBoardDao {
 
 	int getLikeLogs(String member_id, int board_no, int ref_category_no) throws SQLException, NamingException;
 
-	int insertLikeLogs() throws SQLException, NamingException;
+	int insertLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException;
 
-	int updateLikeLogs() throws SQLException, NamingException;
+	int updateLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException;
 
 
 

@@ -102,15 +102,23 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public int insertLikeLogs() throws SQLException, NamingException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int insertLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("member_id", member_id);
+		map.put("board_no", board_no);
+		map.put("ref_category_no", ref_category_no);
+		map.put("like_status", like_status);		
+		return session.insert(ns+".insertLikeLogs", map);
 	}
 
 	@Override
-	public int updateLikeLogs() throws SQLException, NamingException {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("member_id", member_id);
+		map.put("board_no", board_no);
+		map.put("ref_category_no", ref_category_no);
+		map.put("like_status", like_status);		
+		return session.insert(ns+".updateLikeLogs", map);
 	}
 
 }

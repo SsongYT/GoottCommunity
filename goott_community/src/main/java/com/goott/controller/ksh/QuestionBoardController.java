@@ -215,14 +215,31 @@ public class QuestionBoardController {
 		}
 	}
 	
-	// 질문 게시글에 대한 답변 등록
+	// 좋아요 상호작용
 		@RequestMapping(value = "likeAnswer", method = RequestMethod.POST)
 		public ResponseEntity<Map<String, Object>> likeAnswer(@RequestBody LikeLogs likeLogs, HttpServletRequest request) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			ResponseEntity<Map<String, Object>> result = null;
-			System.out.println(likeLogs.toString());			
+			System.out.println(likeLogs.toString());
+			
 			if(likeLogs != null) {				
-				qbService.insertLikeLogs(likeLogs);
+				try {
+					// 서비스단으로 넘겨서 insert or update or do nothing 판별
+					String informMessage = qbService.dealWithLikeLogs(likeLogs);
+					
+					// 기존과 같은 상호작용이 아닐 시에만 count 값 넘기기
+					if(!informMessage.contains("이미")) {						
+						map.put("changeLikeCount", likeLogs.getLike_status());	
+					}					
+					map.put("status", "success");
+					map.put("informMessage", informMessage);				
+					result = new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+					
+				} catch (SQLException | NamingException e) {
+					map.put("status", "fail");
+					result = new ResponseEntity<Map<String,Object>>(map, HttpStatus.BAD_REQUEST);
+					e.printStackTrace();
+				}
 			}
 			
 			return result;
