@@ -104,39 +104,61 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	}
 
 	@Override
-	public String dealWithLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
+	public String handleLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
 		// 좋아요 한 적이 있는지
 		int likeStatus = qbDao.getLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(),
 				likeLogs.getRef_category_no());
-		return returnResult(likeStatus, likeLogs);
+		System.out.println(likeStatus+"확인");
+		return generateResult(likeStatus, likeLogs);
+	}
+	
+	private String generateResult(int likeStatus, LikeLogs likeLogs) throws SQLException, NamingException {
+	    String message = likeLogs.getLike_status() == 1 ? "추천했습니다." : "비추천했습니다.";
+	    
+	    // 상호작용 이력이 없을 때 새로 insert
+	    if (likeStatus == 0) {
+	        return handleNewLikeLogs(likeLogs, message);
+	        
+	        // 이전과 같은 상호작용 했을 때 delete
+	    } else if (likeStatus == likeLogs.getLike_status()) {
+	        return handleExistingLikeLogs(likeLogs);
+	        
+	        // 이전과 다른 상호작용 했을 때 update
+	    } else {
+	        return changeExistingLikeLogs(likeLogs, message);
+	    }
 	}
 
-	// 좋아요 상호작용 결과 메세지 반환
-	private String returnResult(int likeStatus, LikeLogs likeLogs) throws SQLException, NamingException {
-		String result = "";
-		String message = likeLogs.getLike_status() == 1 ? "추천하였습니다." : "비추천하였습니다.";
-		// like_status: 1 = like, -1 = dislike
-
-		// 좋아요 한 이력이 없을 땐 새로 insert
-		if (likeStatus == 0) {
-			if (qbDao.insertLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(),
-					likeLogs.getLike_status()) > 0) {
-				result = message;
+	// 이력이 없을 때 like_logs insert
+	private String handleNewLikeLogs(LikeLogs likeLogs, String message) throws SQLException, NamingException {
+	    String result = "";
+	    if (qbDao.insertLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(), likeLogs.getLike_status()) > 0) {
+	        if (likeLogs.getRef_category_no() == 2 && qbDao.updateAnswerLikeCount(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getLike_status()) > 0) {
+	            result = message;
+	        }
+	    }
+	    return result;
+	}
+	
+	// 이전과 같은 상호작용 시 delete
+		private String handleExistingLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException {
+			String result = "";
+			if(qbDao.deleteLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(), likeLogs.getLike_status()) > 0) {
+				  if (likeLogs.getRef_category_no() == 2 && qbDao.updateAnswerLikeCount(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getLike_status() * -1) > 0) {
+			            result = (likeLogs.getLike_status() == 1 ? "추천" : "비추천") + " 취소했습니다.";
+			        }
 			}
-
-			// 좋아요 한 이력이 있고 likeStatus가 같은 값일 때 true 반환
-		} else if (likeStatus == likeLogs.getLike_status()) {
-			result = "이미 " + message;
-
-			// 좋아요 한 이력이 있고 likeStatus가 다른 값일 때 update
-		} else {
-			if (qbDao.updateLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(),
-					likeLogs.getLike_status()) > 0) {
-				result = message;
-			}
+			return result;
 		}
-		return result;
 
+	// 이전과 다른 상호작용 시 update
+	private String changeExistingLikeLogs(LikeLogs likeLogs, String message) throws SQLException, NamingException {
+	    String result = "";
+	    if (qbDao.updateLikeLogs(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getRef_category_no(), likeLogs.getLike_status()) > 0) {
+	        if (likeLogs.getRef_category_no() == 2 && qbDao.updateAnswerLikeCount(likeLogs.getMember_id(), likeLogs.getBoard_no(), likeLogs.getLike_status() * 2) > 0) {
+	            result = message;
+	        }
+	    }
+	    return result;
 	}
-
 }

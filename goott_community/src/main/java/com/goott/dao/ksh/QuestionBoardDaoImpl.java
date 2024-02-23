@@ -12,6 +12,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.goott.vodto.ksh.AnswerDto;
+import com.goott.vodto.ksh.LikeLogs;
 import com.goott.vodto.ksh.QuestionBoardDto;
 import com.goott.vodto.ksh.UploadFiles;
 
@@ -97,8 +98,9 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		map.put("member_id", member_id);
 		map.put("board_no", board_no);
 		map.put("ref_category_no", ref_category_no);
-		return session.selectOne(ns+".getLikeLogs", map);
-		
+
+		Integer result = session.selectOne(ns+".getLikeLogs", map);		
+		return result != null ? result : 0;
 	}
 
 	@Override
@@ -119,6 +121,27 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		map.put("ref_category_no", ref_category_no);
 		map.put("like_status", like_status);		
 		return session.insert(ns+".updateLikeLogs", map);
+	}
+
+	@Override
+	public int updateAnswerLikeCount(String member_id, int board_no, int like_status)
+			throws SQLException, NamingException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("member_id", member_id);
+		map.put("board_no", board_no);
+		map.put("like_status", like_status);		
+		return session.update(ns+".updateAnswerLikeCount", map);
+	}
+
+	@Override
+	public int deleteLikeLogs(String member_id, int board_no, int ref_category_no, int like_status)
+			throws SQLException, NamingException {
+		Map<String, Object> map = new HashMap<>();
+		map.put("member_id", member_id);
+		map.put("board_no", board_no);
+		map.put("ref_category_no", ref_category_no);
+		map.put("like_status", like_status);		
+		return session.delete(ns+".deleteLikeLogs", map);
 	}
 
 }

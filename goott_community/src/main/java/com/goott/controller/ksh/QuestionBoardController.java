@@ -225,12 +225,12 @@ public class QuestionBoardController {
 			if(likeLogs != null) {				
 				try {
 					// 서비스단으로 넘겨서 insert or update or do nothing 판별
-					String informMessage = qbService.dealWithLikeLogs(likeLogs);
+					String informMessage = qbService.handleLikeLogs(likeLogs);
 					
 					// 기존과 같은 상호작용이 아닐 시에만 count 값 넘기기
-					if(!informMessage.contains("이미")) {						
-						map.put("changeLikeCount", likeLogs.getLike_status());	
-					}					
+					if(informMessage.equals("")) {
+						informMessage = "오류가 발생했습니다. 잠시 후에 다시 시도해주세요.";
+					}
 					map.put("status", "success");
 					map.put("informMessage", informMessage);				
 					result = new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);

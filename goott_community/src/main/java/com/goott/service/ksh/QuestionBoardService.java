@@ -22,7 +22,7 @@ public interface QuestionBoardService {
 
 	boolean insertAnswer(AnswerDto answer) throws SQLException, NamingException;
 
-	String dealWithLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException;
+	String handleLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException;
 	
 
 }

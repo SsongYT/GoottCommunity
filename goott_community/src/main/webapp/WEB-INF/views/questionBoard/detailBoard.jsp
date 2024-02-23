@@ -130,7 +130,7 @@
 			outputAnswers += `<div class="row">
 			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up up" onclick="likeThisAnswer(\${item.answer_no}, 1)"></i>
 			<span class="likeCount">\${item.like_count}</span>
-			<i class="fa-solid fa-circle-chevron-down down" onclick="likeThisAnswer(\${item.answer_no}, 1)"></i>
+			<i class="fa-solid fa-circle-chevron-down down" onclick="likeThisAnswer(\${item.answer_no}, -1)"></i>
 			</div>
 			
 			<div class="container col-xs-11"><div>\${item.writer} \${formattedDate}</div><div>\${item.content}</div></div></div><hr>`;
@@ -162,13 +162,13 @@
 			async : false, 
 			success : function(data) {
 				if (data.status == "success") {
-					 $('#summernote').summernote('code', ''); // 에디터 비우기
+					alert(data.informMessage);
 					showDetailBoard();
 				}
 			},
 			error : function(data) {
 				console.log(data);
-				alert("오류로 인한 답변 등록 실패");
+				alert("오류로 인해 추천 실패했습니다. 잠시 후에 다시 시도해주세요.");
 			}
 		});
 	}
@@ -269,6 +269,7 @@
 	
 	.fa-solid {
 		font-size : 2em;
+		cursor : pointer;
 	}
 	
 	.likeCount {
