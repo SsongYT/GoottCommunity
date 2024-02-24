@@ -12,14 +12,31 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-	<script src="/app/resources/js/pagingInfo.js"></script>
+<script src="/app/resources/js/pagingInfo.js"></script>
 <title>질문게시판</title>
 </head>
 <script>
 	let data = new Object();
 	let pageNoData = 0;
+	let selectedCategoryData = [];
 	$(function() {
 		getAllBoard(pageNoData);
+		// 카테고리 변경 감지 시
+		$("#boardCategory").on("change", function(){
+			// 선택된 카테고리
+			let selectedCategory = $(this).val();			
+			if(selectedCategory != "all") {							
+				for (let i = 0; i < data.list.length; i++) {
+					if(data.list[i].category == selectedCategory) {
+						 // 선택된 카테고리와 일치하는 모든 항목을 배열에 추가
+						selectedCategoryData.push(data.list[i]);
+					}
+				}
+				console.log(selectedCategoryData);
+			}
+			
+	    });
+		
 	});
 	function getAllBoard(pageNo) {
 		pageNo = pageNo || 1; // 매개변수가 없으면 0을 사용하도록 수정
@@ -73,13 +90,20 @@
 		$('.piOutput').html(piOutput);		
 	}
 
-	
+ 	
 	
 </script>
 <body>
 	<div class="container mt-3">
 		<h2>질문게시판</h2>
 		<p>코드, 학원, 취업 등 자유롭게 질문하고 답하세요!</p>
+		<select name="category" id="boardCategory">
+			<option value="all">전체</option>
+			<option value="코딩">코딩</option>
+			<option value="취업">취업</option>
+			<option value="학원">학원</option>
+			<option value="기타">기타</option>
+		</select>
 		<table class="table table-hover">
 			<thead>
 				<tr>
@@ -89,10 +113,11 @@
 				</tr>
 			</thead>
 			<tbody class="tbody">
-			
+
 			</tbody>
 		</table>
-		<button type="button" class="btn btn-primary" style="float:right;" onclick="location.href='/app/questionBoard/writeBoard'">글쓰기</button>
+		<button type="button" class="btn btn-primary" style="float: right;"
+			onclick="location.href='/app/questionBoard/writeBoard'">글쓰기</button>
 		<ul class="pagination piOutput"></ul>
 	</div>
 </body>
