@@ -12,34 +12,40 @@
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+<!-- pagingInfo 함수 -->
 <script src="/app/resources/js/pagingInfo.js"></script>
 <title>질문게시판</title>
 </head>
 <script>
 	let data = new Object();
 	let pageNoData = 0;
-	let selectedCategoryData = [];
+	let selectedCategory = "all";
+	
 	$(function() {
 		getAllBoard(pageNoData);
 		// 카테고리 변경 감지 시
 		$("#boardCategory").on("change", function(){
 			// 선택된 카테고리
-			let selectedCategory = $(this).val();			
-			if(selectedCategory != "all") {							
+			selectedCategory = $(this).val();			
+			if(selectedCategory != "all") {
+				data.selectedCategoryData = [];
 				for (let i = 0; i < data.list.length; i++) {
 					if(data.list[i].category == selectedCategory) {
 						 // 선택된 카테고리와 일치하는 모든 항목을 배열에 추가
-						selectedCategoryData.push(data.list[i]);
+						data.selectedCategoryData.push(data.list[i]);
 					}
 				}
-				console.log(selectedCategoryData);
+				makePi(data.selectedCategoryData.length, 1);
+				console.log(data);
+			} else {
+				makePi(data.totalPostCnt, data.pageNo);
 			}
-			
-	    });
-		
+	    });		
 	});
+	
+	// 모든 질문 게시글 가져오기
 	function getAllBoard(pageNo) {
-		pageNo = pageNo || 1; // 매개변수가 없으면 0을 사용하도록 수정
+		pageNo = pageNo || 1; // 매개변수가 없으면 1을 사용하도록 수정
 		console.log(pageNo);
 		let result = null;
 		$.ajax({
@@ -58,6 +64,8 @@
 		});
 	
 	}
+	
+	// 글목록과 페이지 블럭 띄우기
 	function showBoard(pageInfo) {
 		console.log("글목록과 페이지 블럭 띄우기");
 		let pi = pageInfo;	
@@ -65,25 +73,28 @@
 		let output = "";
 		let piOutput = "";
 		if(data.status == "success") {
-			let items = data.list;
-			for(let j = pi.startRowIndex; j < Math.min(items.length, pi.startRowIndex + pi.viewPostCntPerPage); j++){
-				output += `<tr onclick="location.href='/app/questionBoard/\${items[j].no}'">
-				<td class="col-md-3">\${items[j].no}</td>
-				<td class="col-md-5">\${items[j].title}</td>
-				<td class="col-md-4">\${items[j].writer}</td></tr>`;
-			}			
-			if(pi.pageBlockOfCurrentPage != 1) {
-				piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},1)">처음</a></li>`;
-				piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.startNumOfCurrentPagingBlock-1})">이전</a></li>`
-
-			}
-			for(let i = pi.startNumOfCurrentPagingBlock; i <= pi.endNumOfCurrentPagingBlock; i++) {
-				piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${i})">\${i}</a></li>`;
-			}
-			if (pi.pageBlockOfCurrentPage != pi.totalPagingBlockCnt) {				
-				piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.endNumOfCurrentPagingBlock+1})">다음</a></li>`
-				piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.totalPageCnt})">끝</a></li>`;
-
+			let items = data.selectedCategoryData != null && selectedCategory != "all" ? data.selectedCategoryData : data.list;
+			if(items.length != 0) {
+				output += `<tr><th>글번호</th><th>제목</th><th>작성자</th></tr>`;
+				for(let j = pi.startRowIndex; j < Math.min(items.length, pi.startRowIndex + pi.viewPostCntPerPage); j++){
+					output += `<tr onclick="location.href='/app/questionBoard/\${items[j].no}'">
+					<td class="col-md-3">\${items[j].no}</td>
+					<td class="col-md-5">\${items[j].title}</td>
+					<td class="col-md-4">\${items[j].writer}</td></tr>`;
+				}			
+				if(pi.pageBlockOfCurrentPage != 1) {
+					piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt}, 1)">처음</a></li>`;
+					piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.startNumOfCurrentPagingBlock-1})">이전</a></li>`;
+				}
+				for(let i = pi.startNumOfCurrentPagingBlock; i <= pi.endNumOfCurrentPagingBlock; i++) {
+					piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${i})">\${i}</a></li>`;
+				}				
+				if (pi.pageBlockOfCurrentPage != pi.totalPagingBlockCnt) {				
+					piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.endNumOfCurrentPagingBlock+1})">다음</a></li>`;
+					piOutput += `<li class="page-item"><a class="page-link" onclick="makePi(\${pi.totalPostCnt},\${pi.totalPageCnt})">끝</a></li>`;	
+				}
+			} else {
+				output = `<div style="text-align : center;">게시글이 없습니다.</div>`;
 			}
 		}		
 		$('.tbody').html(output);
@@ -105,15 +116,9 @@
 			<option value="기타">기타</option>
 		</select>
 		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>글번호</th>
-					<th>제목</th>
-					<th>작성자</th>
-				</tr>
+			<thead>				
 			</thead>
 			<tbody class="tbody">
-
 			</tbody>
 		</table>
 		<button type="button" class="btn btn-primary" style="float: right;"
