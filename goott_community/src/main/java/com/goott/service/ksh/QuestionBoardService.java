@@ -23,6 +23,8 @@ public interface QuestionBoardService {
 	boolean insertAnswer(AnswerDto answer) throws SQLException, NamingException;
 
 	String handleLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException;
+
+	boolean deleteBoard(int no);
 	
 
 }

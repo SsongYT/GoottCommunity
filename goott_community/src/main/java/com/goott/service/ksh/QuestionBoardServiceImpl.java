@@ -161,4 +161,9 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	    }
 	    return result;
 	}
+
+	@Override
+	public boolean deleteBoard(int no) {		
+		return qbDao.deleteBoard(no) == 1 ? true : false;
+	}
 }

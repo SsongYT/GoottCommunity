@@ -23,6 +23,7 @@ public class QuestionBoardDto {
 	private int ref;
 	private String category;
 	private List<UploadFiles> fileList;
+	private List<UploadFiles> deleteFileList;
 	private List<Integer> uf_no;
 	private int ufNoCount;
 	private int answerCount;

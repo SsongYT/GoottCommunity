@@ -123,4 +123,8 @@
 		AND ref_category_no = #{ref_category_no}
 		AND member_id = #{member_id}
 	</delete>
+	
+	<delete id="deleteBoard">
+		DELETE FROM question_board WHERE no = #{no}
+	</delete>
 </mapper>

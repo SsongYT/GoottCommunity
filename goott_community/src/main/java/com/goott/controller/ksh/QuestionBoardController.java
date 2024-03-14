@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -164,6 +165,9 @@ public class QuestionBoardController {
 		Map<String, Object> map = new HashMap<String, Object>();
 		System.out.println(qBoard.toString());
 		try {
+			if(!qBoard.getDeleteFileList().isEmpty()) {
+				deleteFile("question", qBoard.getDeleteFileList(), request);
+			}
 			// insert 성공 시
 			if (qbService.insertBoard(qBoard)) {
 				System.out.println("게시글 업로드 완료");
@@ -202,6 +206,19 @@ public class QuestionBoardController {
 		}
 		return result;
 	}
+	
+	@GetMapping("deleteBoard/{no}")
+	public ResponseEntity<Map<String, Object>> deleteBoard(@PathVariable int no) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		ResponseEntity<Map<String, Object>> result = null;
+		if(qbService.deleteBoard(no)) {
+			map.put("status", "success");
+			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+		} else {
+			result = new ResponseEntity<Map<String, Object>>(map, HttpStatus.BAD_REQUEST);
+		}
+		return result;
+	}
 
 	// 사용자 기기에서 파일 삭제
 	public void deleteFile(String subPath, List<UploadFiles> fileList, HttpServletRequest request) {
@@ -227,7 +244,6 @@ public class QuestionBoardController {
 					// 서비스단으로 넘겨서 insert or update or do nothing 판별
 					String informMessage = qbService.handleLikeLogs(likeLogs);
 					
-					// 기존과 같은 상호작용이 아닐 시에만 count 값 넘기기
 					if(informMessage.equals("")) {
 						informMessage = "오류가 발생했습니다. 잠시 후에 다시 시도해주세요.";
 					}

@@ -144,4 +144,9 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 		return session.delete(ns+".deleteLikeLogs", map);
 	}
 
+	@Override
+	public int deleteBoard(int no) {
+		return session.delete(ns+".deleteBoard", no);
+	}
+
 }

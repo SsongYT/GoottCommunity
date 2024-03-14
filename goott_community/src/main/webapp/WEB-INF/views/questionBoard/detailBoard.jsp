@@ -36,7 +36,8 @@
 <title>Insert title here</title>
 <script>
 	let isValidContent = false;
-	let fileList = [];
+	let boardFiles = [];	// 게시글 이미지 파일
+	let fileList = [];		// 답변 이미지 파일
 	let isLogin = true;	// false면 비로그인. 우선 true로 작업.
 	$(function() {
 		showDetailBoard();
@@ -111,13 +112,17 @@
 		let output = "";
 		if (data.status == "success") {
 			output += `<h2>\${data.detailBoard.title}</h2><hr>`;
-			output += `<div>\${data.detailBoard.content}</div><hr>`;
+			output += `<div>\${data.detailBoard.content}</div><hr>`;			
+			output += `<button type="button" class="btn btn-primary"
+				onclick="showModal('delete');">삭제</button>`
+			output += `<button type="button" class="btn btn-primary"
+				onclick="showModal('update');">수정</button>`;
 		}
 
 		$('.outputBody').html(output);
 		if(data.detailFiles != null) {
-			
-				showImg(data,"question");
+			boardFiles = data.detailFiles;
+			showImg(data,"question");
 		}
 		
 		// 답변이 있다면
@@ -125,7 +130,6 @@
 			let items = data.detailAnswers;
 			let outputAnswers = "";
 			$.each(items, function(i, item) {
-			// 미리보기 test. likeCount 데이터 받아올 예정.
 			let formattedDate = moment(item.post_date).format('YYYY-MM-DD HH:mm');
 			outputAnswers += `<div class="row">
 			<div class="container col-xs-1"><i class="fa-solid fa-circle-chevron-up up" onclick="likeThisAnswer(\${item.answer_no}, 1)"></i>
@@ -146,6 +150,35 @@
 			showImg(data, "answer");
 		} 
 	}
+	
+	// 게시글 수정, 삭제 확인 모달
+	function showModal(purpose) {
+		if(purpose == "delete") {
+			$(".modalContent").text("삭제하시겠습니까?");
+			$(".confirm").attr("onclick","deleteBoard();");
+		} else {
+			$(".modalContent").text("수정하시겠습니까?");
+			$(".confirm").attr("onclick","updateBoard();");
+		}		
+		$('#myModal').modal('show');
+	}
+	
+	// 게시글 삭제
+	function deleteBoard() {
+		$.ajax({
+			url : "/app/questionBoard/deleteBoard/${no}",
+			type : "GET",
+			async : false, 
+			success : function(data) {
+				alert("hi");
+			},
+			error : function(data) {
+				console.log(data);
+				alert("오류로 인해 추천 실패했습니다. 잠시 후에 다시 시도해주세요.");
+			}
+		});
+	}
+	
 	
 	function likeThisAnswer(answerNo, likeStatus) {
 		let sendLikeStatus = {
@@ -250,6 +283,7 @@
 	.btn {
 		float: right;
 		margin-top: 10px;
+		margin-left: 10px;
 	}
 	
 	#goToLogin {
@@ -290,4 +324,26 @@
 			onclick="isValidAnswer();">작성</button>
 	</div>
 </body>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p class="modalContent"></p>
+      </div>
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default confirm">확인</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 </html>

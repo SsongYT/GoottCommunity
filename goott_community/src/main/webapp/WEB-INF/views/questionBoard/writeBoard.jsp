@@ -38,6 +38,7 @@
 	let isValidTitle = false;
 	let isValidContent = false;
 	let fileList = [];
+	let deleteFileList = [];
 	
 	$(function() {
 		$('#summernote').summernote({
@@ -67,18 +68,45 @@
 				}
 			}
 		});
+		$("button[aria-label='사진 삭제']").on('click', function() {
+	        // 이 버튼이 클릭되었을 때 수행할 동작을 여기에 작성합니다.
+	        checkFileList();
+	    });
 	});
 	
+	function checkFileList() {
+		let boardContent = $('#summernote').summernote('code');
+		console.log(boardContent);
+		// HTML 문자열을 jQuery 객체로 변환하여 이미지 태그를 선택
+		let $images = $(boardContent).find('img');
+
+		// 이미지 태그의 src 속성 값을 추출하여 배열에 저장
+		let srcValues = [];
+		$images.each(function() {
+			let srcValue = $(this).attr('src');
+			let index = srcValue.indexOf('\\');
+			let imgValue = srcValue.substring(index);
+		    srcValues.push(imgValue);
+		});
+		
+		// srcValues 배열에 포함되는 객체들을 필터링하여 새로운 배열을 생성
+		let matchedFileList = fileList.filter(file => srcValues.includes(file.new_fileName));
+		
+		// srcValues 배열에 포함되지 않는 객체들을 필터링하여 새로운 배열을 생성
+		deleteFileList = fileList.filter(file => !srcValues.includes(file.new_fileName));
+		
+		fileList = matchedFileList;
+		
+	}
 	
 	function insertBoard(content) {		
-		
 		let sendBoard = {
 				"title" :  $('#boardTitle').val(),
 				"content" : content,
 				"category" : $('#boardCategory').val(),
 				fileList,
-		}
-		
+				deleteFileList,
+		}		
 		$.ajax({
 			url : "/app/questionBoard/insertBoard",
 			type : "POST",
@@ -122,7 +150,6 @@
 
 		// 유효성 통과 시
 		if (isValidCategory && isValidTitle && isValidContent) {
-
 			// 정규표현식을 사용하여 img 태그의 src 속성 삭제.
 			let outputString = boardContent.replace(
 					/<img\s+([^>]*\s)?src="[^"]*"\s?([^>]*)>/g, '<img $1$2>');
