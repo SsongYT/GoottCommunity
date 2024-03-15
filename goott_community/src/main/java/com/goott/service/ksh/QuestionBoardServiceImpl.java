@@ -38,10 +38,10 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	// 질문 게시글 등록
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException {
-		boolean result = false;
-		if (qbDao.insertBoard(qBoard) > 0) {
-			result = insertFiles(qBoard.getFileList(), qBoard.getNo(), 1);
+	public int insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException {
+		int result = 0;
+		if (qbDao.insertBoard(qBoard) > 0 && insertFiles(qBoard.getFileList(), qBoard.getNo(), 1)) {
+			result = qBoard.getNo();
 		}
 		return result;
 	}
@@ -163,7 +163,17 @@ public class QuestionBoardServiceImpl implements QuestionBoardService {
 	}
 
 	@Override
-	public boolean deleteBoard(int no) {		
+	public boolean deleteBoard(int no) throws SQLException, NamingException {		
 		return qbDao.deleteBoard(no) == 1 ? true : false;
+	}
+
+	@Override
+	public boolean updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException {	
+		boolean result = false;
+		if(qbDao.updateBoard(qbDto) > 0) {			
+			result = insertFiles(qbDto.getFileList(), qbDto.getNo(), 1);
+		}
+		
+		return result;
 	}
 }

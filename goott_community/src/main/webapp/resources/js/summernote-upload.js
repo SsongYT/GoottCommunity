@@ -20,8 +20,10 @@
 	}
 	
 		function addFileList(data) {
-		let i = fileList.length;
-		fileList[i] = data.file;
-		console.log(fileList);
-	}
+			let i = fileList.length;
+			fileList[i] = data.file;
+			console.log(fileList);
+		}
+		
+		
 	

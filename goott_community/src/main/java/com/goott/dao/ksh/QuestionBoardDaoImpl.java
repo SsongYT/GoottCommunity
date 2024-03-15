@@ -145,8 +145,13 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public int deleteBoard(int no) {
-		return session.delete(ns+".deleteBoard", no);
+	public int deleteBoard(int no) throws SQLException, NamingException {
+		return session.delete(ns+".deleteBoard", no) ;
+	}
+
+	@Override
+	public int updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException {
+		return session.update(ns+".updateBoard", qbDto);
 	}
 
 }

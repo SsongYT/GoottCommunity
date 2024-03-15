@@ -16,7 +16,7 @@ public interface QuestionBoardService {
 
 	List<QuestionBoardDto> getAllBoard() throws SQLException, NamingException;
 
-	boolean insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException;
+	int insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException;
 
 	Map<String, Object> getDetailBoard(int no) throws SQLException, NamingException;
 
@@ -24,7 +24,9 @@ public interface QuestionBoardService {
 
 	String handleLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException;
 
-	boolean deleteBoard(int no);
+	boolean deleteBoard(int no) throws SQLException, NamingException;
+
+	boolean updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException;
 	
 
 }

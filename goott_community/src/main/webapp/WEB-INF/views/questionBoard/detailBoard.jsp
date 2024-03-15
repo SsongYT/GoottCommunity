@@ -11,12 +11,14 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
 <!-- summernote 연결 -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script
 	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 <!-- 서머노트를 위해 추가해야할 부분 -->
 <script src="/app/resources/summernote/summernote-lite.js"></script>
@@ -27,7 +29,8 @@
 <script src="https://kit.fontawesome.com/0dda0703cf.js"
 	crossorigin="anonymous"></script>
 <!-- moment.js 라이브러리 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <!-- summernote upload 분리-->
 <script src="/app/resources/js/summernote-upload.js"></script>
 <link
@@ -38,6 +41,7 @@
 	let isValidContent = false;
 	let boardFiles = [];	// 게시글 이미지 파일
 	let fileList = [];		// 답변 이미지 파일
+	let deleteFileList = []; // 삭제할 답변 이미지 파일
 	let isLogin = true;	// false면 비로그인. 우선 true로 작업.
 	$(function() {
 		showDetailBoard();
@@ -84,6 +88,10 @@
 				}
 			});
 		}
+		$("button[aria-label='사진 삭제']").on('click', function() {
+	        // 이 버튼이 클릭되었을 때 수행할 동작
+	        checkFileList();
+	    });
 	});
 	
 	// no번의 글 data 가져오기
@@ -158,7 +166,7 @@
 			$(".confirm").attr("onclick","deleteBoard();");
 		} else {
 			$(".modalContent").text("수정하시겠습니까?");
-			$(".confirm").attr("onclick","updateBoard();");
+			$(".confirm").attr("onclick","location.href='/app/questionBoard/updateBoard/${no}'");
 		}		
 		$('#myModal').modal('show');
 	}
@@ -170,15 +178,14 @@
 			type : "GET",
 			async : false, 
 			success : function(data) {
-				alert("hi");
+				location.href="/app/questionBoard/boardList";
 			},
 			error : function(data) {
 				console.log(data);
-				alert("오류로 인해 추천 실패했습니다. 잠시 후에 다시 시도해주세요.");
+				alert("오류로 인해 삭제 실패했습니다. 잠시 후에 다시 시도해주세요.");
 			}
 		});
 	}
-	
 	
 	function likeThisAnswer(answerNo, likeStatus) {
 		let sendLikeStatus = {
@@ -211,8 +218,8 @@
 		console.log(imgPath);
 		let imgCount = document.querySelectorAll('.'+imgPath).length;
 		if(imgCount > 0) {
-			console.log(imgCount)
-			let imgUrl = "/app/resources/summernote/questionBoard/"+imgPath+"/"
+			console.log(imgCount);
+			let imgUrl = "/app/resources/summernote/questionBoard/"+imgPath+"/";
 			let imgElements = document.getElementsByClassName(imgPath);
 			console.log(imgElements);
 			if(imgPath == "question") {				
@@ -259,6 +266,7 @@
 				"writer" : "bbiyagi",
 				"content" : content,
 				fileList,
+				deleteFileList,
 		}		
 		$.ajax({
 			url : "/app/questionBoard/"+"${no}"+"/insertAnswer",
@@ -280,70 +288,69 @@
 	}
 </script>
 <style>
-	.btn {
-		float: right;
-		margin-top: 10px;
-		margin-left: 10px;
-	}
-	
-	#goToLogin {
-		text-decoration: underline;
-		font-weight: bold;
-		cursor: pointer;
-	}
-	#answerCount {
-		padding-bottom : 10px;
-	}
-	
-	.col-xs-1{
-		display: flex;
-		flex-direction: column; 
-		align-items: center;
-	}
-	
-	.fa-solid {
-		font-size : 2em;
-		cursor : pointer;
-	}
-	
-	.likeCount {
-		font-size: 25px;
-	}
-	
+.btn {
+	float: right;
+	margin-top: 10px;
+	margin-left: 10px;
+}
+
+#goToLogin {
+	text-decoration: underline;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+#answerCount {
+	padding-bottom: 10px;
+}
+
+.col-xs-1 {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fa-solid {
+	font-size: 2em;
+	cursor: pointer;
+}
+
+.likeCount {
+	font-size: 25px;
+}
 </style>
 </head>
 <body>
-	<div  class="container mt-3">
-	<div class="outputBody"></div>
-	<!-- 질문 작성자 프로필 구현 예정 -->
-	<h3 id="answerCount"></h3>
-	<div class="outputAnswers"></div>
-	<h3>Your Answer</h3>
-	<textarea id="summernote"></textarea>
-	<button type="button" class="btn btn-primary"
+	<div class="container mt-3">
+		<div class="outputBody"></div>
+		<!-- 질문 작성자 프로필 구현 예정 -->
+		<h3 id="answerCount"></h3>
+		<div class="outputAnswers"></div>
+		<h3>Your Answer</h3>
+		<textarea id="summernote"></textarea>
+		<button type="button" class="btn btn-primary"
 			onclick="isValidAnswer();">작성</button>
 	</div>
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Modal Header</h4>
+				</div>
+				<div class="modal-body">
+					<p class="modalContent"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default confirm">확인</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 </body>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <p class="modalContent"></p>
-      </div>
-      <div class="modal-footer">
-      	<button type="button" class="btn btn-default confirm">확인</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
 </html>

@@ -130,13 +130,10 @@ public class UploadFileServiceImpl implements UploadFileService {
 
 	@Override
 	public boolean isExist(String newFileName) throws SQLException, NamingException {
-		boolean result = false;
-		
+		boolean result = false;		
 		if (uDao.selectUploadFile(newFileName) != null) {
 			result = true;
-		}
-		
+		}		
 		return result;
 	}
-	
 }

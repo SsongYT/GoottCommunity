@@ -127,4 +127,9 @@
 	<delete id="deleteBoard">
 		DELETE FROM question_board WHERE no = #{no}
 	</delete>
+	
+	<update id="updateBoard">
+		UPDATE question_board SET title = #{title}, content = #{content},
+		category = #{category} WHERE no = #{no}
+	</update>
 </mapper>
