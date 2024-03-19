@@ -49,9 +49,8 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws SQLException, NamingException {
+	public List<UploadFiles> getBoardUploadFile(int no) throws SQLException, NamingException {
 		Map<String, Object> map = new HashMap<>();
-		map.put("ref_category_no", ref_category_no);
 		map.put("no", no);
 		return session.selectList(ns + ".getBoardUploadFile", map);
 	}
@@ -69,12 +68,10 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws SQLException, NamingException {
+	public int insertUploadFiles(List<UploadFiles> fileList) throws SQLException, NamingException {
 		int count = 0;
 		Map<String, Object> map = new HashMap<>();
 		map.put("list", fileList);
-		map.put("no", no);
-		map.put("ref_category_no", ref_board_category);
 		count = session.insert(ns + ".insertUploadFiles", map);
 		System.out.println(count + "개 insert 완료");
 
@@ -93,32 +90,29 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public int getLikeLogs(String member_id, int board_no, int ref_category_no) {
+	public int getLikeLogs(String member_id, int board_no) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("member_id", member_id);
 		map.put("board_no", board_no);
-		map.put("ref_category_no", ref_category_no);
 
 		Integer result = session.selectOne(ns+".getLikeLogs", map);		
 		return result != null ? result : 0;
 	}
 
 	@Override
-	public int insertLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException {
+	public int insertLikeLogs(String member_id, int board_no, int like_status) throws SQLException, NamingException {
 		Map<String, Object> map = new HashMap<>();
 		map.put("member_id", member_id);
 		map.put("board_no", board_no);
-		map.put("ref_category_no", ref_category_no);
 		map.put("like_status", like_status);		
 		return session.insert(ns+".insertLikeLogs", map);
 	}
 
 	@Override
-	public int updateLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException {
+	public int updateLikeLogs(String member_id, int board_no, int like_status) throws SQLException, NamingException {
 		Map<String, Object> map = new HashMap<>();
 		map.put("member_id", member_id);
 		map.put("board_no", board_no);
-		map.put("ref_category_no", ref_category_no);
 		map.put("like_status", like_status);		
 		return session.insert(ns+".updateLikeLogs", map);
 	}
@@ -134,24 +128,66 @@ public class QuestionBoardDaoImpl implements QuestionBoardDao {
 	}
 
 	@Override
-	public int deleteLikeLogs(String member_id, int board_no, int ref_category_no, int like_status)
+	public int deleteLikeLogs(String member_id, int board_no, int like_status)
 			throws SQLException, NamingException {
 		Map<String, Object> map = new HashMap<>();
 		map.put("member_id", member_id);
 		map.put("board_no", board_no);
-		map.put("ref_category_no", ref_category_no);
 		map.put("like_status", like_status);		
 		return session.delete(ns+".deleteLikeLogs", map);
 	}
 
 	@Override
 	public int deleteBoard(int no) throws SQLException, NamingException {
-		return session.delete(ns+".deleteBoard", no) ;
+		int result = session.delete(ns+".deleteBoard", no);
+		System.out.println(result);
+		return result;
 	}
 
 	@Override
 	public int updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException {
 		return session.update(ns+".updateBoard", qbDto);
+	}
+
+	@Override
+	public List<UploadFiles> getUploadFileNo(List<UploadFiles> fileList) throws SQLException, NamingException {
+		return session.selectList(ns+".getUploadFileNo", fileList);
+	}
+
+	@Override
+	public int insertQuesiontUpload(List<UploadFiles> fileList, int no) throws SQLException, NamingException {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("list", fileList);
+		map.put("no", no);
+		return session.insert(ns+".insertQuestionUploadFile", map);
+	}
+
+	@Override
+	public int insertAnswerUpload(List<UploadFiles> fileList, int no) throws SQLException, NamingException {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("list", fileList);
+		map.put("no", no);
+		return session.insert(ns+".insertAnswerUploadFile", map);
+	}
+
+	@Override
+	public QuestionBoardDto getBoardFilesCount(int no) throws SQLException, NamingException {
+		return session.selectOne(ns+".getBoardFilesCount", no);
+	}
+
+	@Override
+	public int deleteAnswerUploadFile(int no) {		
+		return session.delete(ns+".deleteAnswerUploadFile", no);
+	}
+
+	@Override
+	public int deleteQuestionUploadFile(int no) {
+		return session.delete(ns+".deleteQuestionUploadFile", no);
+	}
+
+	@Override
+	public List<UploadFiles> getAnswerUploadFileToDelete(int boardNo) {
+		return session.selectList(ns+".getAnswerUploadFileToDelete", boardNo);
 	}
 
 }

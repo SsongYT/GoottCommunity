@@ -20,5 +20,5 @@ public class LikeLogs {
 	private Timestamp date;
 	private int like_status;
 	private int board_no;
-	private int ref_category_no;
+	private int answer_no;
 }

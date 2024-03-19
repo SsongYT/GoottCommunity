@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 
 import com.goott.vodto.ksh.AnswerDto;
 import com.goott.vodto.ksh.LikeLogs;
@@ -24,7 +25,7 @@ public interface QuestionBoardService {
 
 	String handleLikeLogs(LikeLogs likeLogs) throws SQLException, NamingException;
 
-	boolean deleteBoard(int no) throws SQLException, NamingException;
+	boolean deleteBoard(int no, HttpServletRequest request) throws SQLException, NamingException;
 
 	boolean updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException;
 	

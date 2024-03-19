@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,18 +106,18 @@ public class UploadFileServiceImpl implements UploadFileService {
 		return completePath.substring(realPath.length()) + File.separator + newFileName;
 	}
 
-	@Override
-	public int deleteFile(String newFileName, String realPath) {
-		int result = -1;
-		String contentType = newFileName.substring(newFileName.lastIndexOf(".") + 1);
+	private boolean deleteFile(String newFileName, String realPath) {
+		boolean result = false;
 		File file = new File(realPath + newFileName);
 		if (file.exists()) {			
-			file.delete();
-			result = 1;
+			if(file.delete()) {				
+				result = true;
+			}
 		} else {
-			result = 0;
+			// 파일 존재하지 않음.
+			System.out.println("?");
+			result = true;
 		}
-		
 		return result;
 	}
 
@@ -134,6 +135,34 @@ public class UploadFileServiceImpl implements UploadFileService {
 		if (uDao.selectUploadFile(newFileName) != null) {
 			result = true;
 		}		
+		return result;
+	}
+	
+	// 파일 저장 경로 얻기
+	@Override
+	public String[] getRealPath(HttpServletRequest request, String subPath) {
+		String relativePath = "resources/summernote/questionBoard/" + subPath;
+		String realPath = request.getSession().getServletContext().getRealPath(relativePath);
+		return new String[] { relativePath, realPath };
+	}
+	
+	// 사용자 기기에서 파일 삭제
+	@Override
+	public boolean deleteFile(String subPath, List<UploadFiles> fileList, HttpServletRequest request) {
+		boolean result = false;
+		// 파일이 있다면
+		if (!fileList.isEmpty()) {
+			String relativePath = "resources/summernote/questionBoard/" + subPath;
+			String realPath = request.getSession().getServletContext().getRealPath(relativePath);
+			for (UploadFiles file : fileList) {
+				if(deleteFile(file.getNew_fileName(), realPath)) {
+					result = true;
+				} else {
+					result = false;
+					break;
+				}
+			}
+		}
 		return result;
 	}
 }

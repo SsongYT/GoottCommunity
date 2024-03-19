@@ -17,11 +17,11 @@ public interface QuestionBoardDao {
 
 	int insertBoard(QuestionBoardDto qBoard) throws SQLException, NamingException;
 
-	int insertUploadFiles(List<UploadFiles> fileList, int no, int ref_board_category) throws SQLException, NamingException;
+	int insertUploadFiles(List<UploadFiles> fileList) throws SQLException, NamingException;
 
 	QuestionBoardDto getDetailBoard(int no) throws SQLException, NamingException;
 
-	List<UploadFiles> getBoardUploadFile(int no, int ref_category_no) throws SQLException, NamingException;
+	List<UploadFiles> getBoardUploadFile(int no) throws SQLException, NamingException;
 
 	List<AnswerDto> getAllAnswers(int no) throws SQLException, NamingException;
 
@@ -29,20 +29,33 @@ public interface QuestionBoardDao {
 
 	List<AnswerDto> getBoardUploadFile(List<AnswerDto> answers) throws SQLException, NamingException;
 
-	int getLikeLogs(String member_id, int board_no, int ref_category_no) throws SQLException, NamingException;
+	int getLikeLogs(String member_id, int board_no) throws SQLException, NamingException;
 
-	int insertLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException;
+	int insertLikeLogs(String member_id, int board_no, int like_status) throws SQLException, NamingException;
 
-	int updateLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException;
+	int updateLikeLogs(String member_id, int board_no, int like_status) throws SQLException, NamingException;
 
 	int updateAnswerLikeCount(String member_id, int board_no, int like_status) throws SQLException, NamingException;
 
-	int deleteLikeLogs(String member_id, int board_no, int ref_category_no, int like_status) throws SQLException, NamingException;
+	int deleteLikeLogs(String member_id, int board_no, int like_status) throws SQLException, NamingException;
 
 	int deleteBoard(int no) throws SQLException, NamingException;
 
 	int updateBoard(QuestionBoardDto qbDto) throws SQLException, NamingException;
 
+	List<UploadFiles> getUploadFileNo(List<UploadFiles> fileList) throws SQLException, NamingException;
+
+	int insertQuesiontUpload(List<UploadFiles> fileList, int no) throws SQLException, NamingException;
+
+	int insertAnswerUpload(List<UploadFiles> fileList, int no) throws SQLException, NamingException;
+
+	QuestionBoardDto getBoardFilesCount(int no) throws SQLException, NamingException;
+
+	int deleteAnswerUploadFile(int boardNo) throws SQLException, NamingException;
+
+	int deleteQuestionUploadFile(int boardNo) throws SQLException, NamingException;
+
+	List<UploadFiles> getAnswerUploadFileToDelete(int boardNo);
 
 
 

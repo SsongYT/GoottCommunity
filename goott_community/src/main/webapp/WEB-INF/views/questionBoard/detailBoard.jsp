@@ -156,7 +156,7 @@
 				
 			$('#answerCount').html(outputAnswersCount);
 			showImg(data, "answer");
-		} 
+		}
 	}
 	
 	// 게시글 수정, 삭제 확인 모달
@@ -324,7 +324,7 @@
 	<div class="container mt-3">
 		<div class="outputBody"></div>
 		<!-- 질문 작성자 프로필 구현 예정 -->
-		<h3 id="answerCount"></h3>
+		<h3 id="answerCount">0 Answer</h3>
 		<div class="outputAnswers"></div>
 		<h3>Your Answer</h3>
 		<textarea id="summernote"></textarea>

@@ -27,6 +27,7 @@ public class QuestionBoardDto {
 	private List<Integer> uf_no;
 	private int ufNoCount;
 	private int answerCount;
+	private int answerUfCount;
 
 
 }
