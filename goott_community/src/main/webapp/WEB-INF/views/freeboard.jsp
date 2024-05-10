@@ -17,7 +17,7 @@
 <title>자유게시판</title>
 
 <script type="text/javascript">
-
+	
 </script>
 
 <style type="text/css">
