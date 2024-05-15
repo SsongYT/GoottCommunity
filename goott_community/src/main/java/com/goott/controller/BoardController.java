@@ -41,8 +41,28 @@ public class BoardController {
 			e.printStackTrace();
 			// 통신에러 예외처리
 		}
+		return new ResponseEntity<ResponseData>(responseData, httpStatus);
+	}
+
+	@GetMapping("boarddetail")
+	public ResponseEntity<ResponseData> boarddetail() {
+		ResponseData responseData = new ResponseData();
+		HttpStatus httpStatus = null;
 		
-		
+		try {
+			
+			responseData = boardService.getBoarddetail();
+			if(responseData.getCode().equals("000")){
+				httpStatus = HttpStatus.OK;
+			} else {
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+			
+		} catch (SQLException | IOException e) {
+			
+			e.printStackTrace();
+			// 통신에러 예외처리
+		}
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
 	}
 	
