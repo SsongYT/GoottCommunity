@@ -64,7 +64,10 @@ public class BoardController {
 			// 통신에러 예외처리
 		}
 		
+
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
 	}
+
+	
 	
 }
