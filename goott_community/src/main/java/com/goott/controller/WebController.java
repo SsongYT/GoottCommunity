@@ -35,4 +35,10 @@ public class WebController {
 	public String openPageFreeBoard() {
 		return "freeboard";
 	}
+	
+	// 자유게시판 쓰기 페이지 이동
+	@GetMapping("/freeboardwrite")
+	public String openPageFreeBoardWrite() {
+		return "freeboardwrite";
+	}
 }

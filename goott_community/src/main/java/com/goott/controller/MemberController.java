@@ -52,7 +52,7 @@ public class MemberController {
 //			responseData.setCode(ExceptionEnum.SQLException.getCode());
 //			responseData.setMessages(ExceptionEnum.SQLException.getMessages());
 		}
-		System.out.println(responseData);
+
 		return new ResponseEntity<ResponseData>(responseData, httpStatus);
 	}
 	

@@ -11,7 +11,7 @@
 </h1>
 
 <P>  The time on the server is ${serverTime}. </P>
-${sessionScope.loginMember}
+	${sessionScope.loginMember}
 
 	<%@ include file="/WEB-INF/views/comm/footer.jsp" %>
 </body>

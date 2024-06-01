@@ -14,7 +14,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 <!-- 아이콘 -->
 <script src="https://kit.fontawesome.com/5970d3684d.js"></script>
-<title>RMSOFT_회원가입</title>
+<title>회원가입</title>
 
 <script type="text/javascript">
 	let isIdValid = false;

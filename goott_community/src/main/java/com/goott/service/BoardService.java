@@ -39,5 +39,10 @@ public class BoardService {
 		
 		return responseData;
 	}
+
+	public ResponseData getBoarddetail() throws SQLException, IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

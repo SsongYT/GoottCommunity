@@ -17,6 +17,42 @@
 <title>자유게시판</title>
 
 <script type="text/javascript">
+	$(document).ready(function(){
+		getBoardList();
+		
+		//글쓰기 페이지로 이동
+		$('#freeBoardWrite').on("click", function() {
+			location.href="freeboardwrite";
+		})
+		
+	});
+	
+	// 게시글 리스크 데이터 가져오기
+	function getBoardList() {
+		$.ajax({
+			url: 'boardList',
+	       	type: 'get',
+	       	dataType: 'json',
+	       	async : false,
+	       	success: function(data) {
+	       		if(data.code == "000") {
+					makeBoardList(data.data);
+	       		} else if(data.code == "001") {
+	       			//게시글 없음 예외처리
+	       		}
+	       	},
+	     	error: function(error) {
+	     		// 예외처리
+	       		console.log(error);
+	       		console.log(error.responseJSON.code);
+	    	}
+		});
+	}
+	
+	// 게시글 리스크 표시
+	function makeBoardList(data) {
+		console.log(data);
+	}
 	
 </script>
 
@@ -27,7 +63,7 @@
 </head>
 <body>
 	<%@ include file="/WEB-INF/views/comm/header.jsp"%>
-	<div>
+	<div style="margin-top:30px">
 		<div class="row">
 			<div class="col-xxl-3"></div>
 			<div class="col-xxl-6">
@@ -35,6 +71,7 @@
 			</div>
 			<div class="col-xxl-3"></div>
 		</div>
+		
 		<div class="row">
 			<div class="col-xxl-3"></div>
 			<div class="col-xxl-6">
@@ -68,6 +105,13 @@
 		<div class="row">
 			<div class="col-xxl-3"></div>
 			<div class="col-xxl-6">
+				<button type="button" class="btn btn-primary" id="freeBoardWrite">글쓰기</button>
+			</div>
+			<div class="col-xxl-3"></div>
+		</div>
+		<div class="row">
+			<div class="col-xxl-3"></div>
+			<div class="col-xxl-6">
 				<ul class="pagination justify-content-center">
   					<li class="page-item"><a class="page-link" href="#">Previous</a></li>
   					<li class="page-item"><a class="page-link" href="#">1</a></li>
@@ -79,7 +123,7 @@
 			<div class="col-xxl-3"></div>
 		</div>
 	</div>
-
+	
 	<%@ include file="/WEB-INF/views/comm/footer.jsp"%>
 </body>
 </html>
