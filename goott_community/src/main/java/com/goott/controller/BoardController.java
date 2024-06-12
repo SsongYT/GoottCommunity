@@ -60,7 +60,7 @@ public class BoardController {
 			
 		} catch (SQLException | IOException e) {
 			
-			e.printStackTrace();
+			e.printStackTrace(); 
 			// 통신에러 예외처리
 		}
 		
