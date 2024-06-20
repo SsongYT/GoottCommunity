@@ -55,7 +55,7 @@ public class BoardController {
 			if(responseData.getCode().equals("000")){
 				httpStatus = HttpStatus.OK;
 			} else {
-				httpStatus = HttpStatus.BAD_REQUEST;
+				httpStatus = HttpStatus.BAD_REQUEST; 
 			}
 			
 		} catch (SQLException | IOException e) {
